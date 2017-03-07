@@ -1,0 +1,22 @@
+
+                    <div class="small_block block_bcolor_red">平均每周登录次数：<span class="avg-login-num">8.6</span>次</div>
+                    <div class="small_block block_bcolor_green">总共布置测试次数：<span class="test-num">8.6</span>次</div>
+                    <div class="small_block block_bcolor_yellow">平均每周出题量： <span class="test-question-num">8.6</span>题</div>
+                    <div class="small_block block_bcolor_blue">总共管理学生：<span class="student-num">8.6</span>人</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        getPersonalPerformance();
+    });
+
+    function getPersonalPerformance() {
+        ajaxPost('http://school.tiku365.cn/school_home_page/getPersonalPerformance', '', function (Data) {
+            $('.test-num').html(Data.test_num);
+            $('.test-question-num').html(Data.test_question_num.toFixed(1));
+            $('.avg-login-num').html(Data.avg_login_num.toFixed(1));
+            $('.student-num').html(Data.student_num);
+        });
+    }
+
+</script>

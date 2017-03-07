@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="js/jquery.min.js"></script>
+    <script type="application/ecmascript" src="js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>教师管理>查看详情</title>
+</head>
+
+<body>
+<div id="header"></div>
+<div id="left-navigation"></div>
+<div id="mainbody">
+    <div class="mainbody_title_box">教师管理>查看详情</div>
+    <div class="mainbody_bottom">
+        <div class='tab-container'>
+            <div class='panel-container'>
+                <div class="main_bottom_graybox">
+                    <p>教师姓名：<span class="teacher_name"></span></p>
+
+                    <p>教师管理的班级：<span class="teacher_system"></span></p>
+
+                    <p>联系电话：<span class="teacher_phone"></span></p>
+
+                    <p>邮箱：<span class="teacher_email"></span></p>
+                </div>
+                <div class="main_bottom_graybox">
+                    <p>平均每位学生预测得分：<span class="font_color_red forecast_score" style="font-size:18px">84分</span></p>
+
+                    <p>平均每位学生总答题量：<span class="font_color_yellow total_num" style="font-size:18px"></span></p>
+
+                    <p>平均每位学生答题正确率：<span class="font_color_green accuracy" style="font-size:18px"></span></p>
+
+                    <p>平均每位学生练习总时长：<span class="font_color_blue practice_time" style="font-size:18px"></span></p>
+                </div>
+                <div class="main_bottom_graybox" style="color:#FFFFFF;">
+                    <div class="small_block block_bcolor_pink b_r">平均每周登录次数：<span class="avg_login_num"></span>次</div>
+                    <div class="small_block block_bcolor_blue b_r">总共为学生布置测试：<span class="test_num"></span>次</div>
+                    <div class="small_block block_bcolor_yellow b_r">总共为学生出题： <span class="test_question_num"></span>题</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="foot"></div>
+
+</body>
+<script type="text/javascript">
+  $("#header").load("header.html");
+    $("#left-navigation").load("left.html", function() {
+        $("ul.accordion>li:eq(4)").addClass('open');
+    });
+    $("#foot").load("footer.html");
+
+
+    line_color_change();
+    //表格列的颜色 交替显示
+    function line_color_change() {
+        var obj = $("tr");
+        obj.each(function (index, el) {
+            if (parseInt(index) % 2 != 0) {
+                $(this).addClass('bg_white');
+            }
+        });
+    }
+    $(function () {
+        var s_m_id = getUrlParam('s_m_id');
+        var system = getUrlParam('system');
+        $('.teacher_system').html(system);
+        var total_num = getUrlParam('total_num');
+        $('.total_num').html(total_num+'题');
+        var forecast_score = getUrlParam('forecast_score');
+        $('.forecast_score').html(forecast_score+'分');
+        var practice_time = getUrlParam('practice_time');
+        $('.practice_time').html(practice_time+'分钟');
+        var accuracy = getUrlParam('accuracy');
+        $('.accuracy').html(accuracy+'%');
+        getTeacherDetail(s_m_id,system);
+    });
+
+    function getTeacherDetail(s_m_id,system){
+        ajaxPost('/teacher/getTeacherDetail',{s_m_id:s_m_id},function(Data){
+            $('.teacher_name').html(Data.name);
+            $('.teacher_phone').html(Data.phone);
+            $('.teacher_email').html(Data.email);
+            $('.avg_login_num').html(Data.avg_login_num.toFixed(1));
+            $('.test_num').html(Data.test_num);
+            $('.test_question_num').html(Data.test_question_num);
+        });
+    }
+
+</script>
+</html>

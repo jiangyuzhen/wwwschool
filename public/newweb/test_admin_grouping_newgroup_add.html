@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>测试管理>分组管理>新建分组</title>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div id="left-navigation"></div>
+    <div id="mainbody">
+        <div class="mainbody_title_box">测试管理>分组管理>新建分组</div>
+        <div class="mainbody_bottom">
+            <div class='tab-container'>
+                <div class='panel-container'>
+                    <p class="font_size_38" style="margin-top:-40px;">
+                        <i class="fa fa-edit (alias) show_cursor text_center font_color_black" style="margin-right:20px;"><br />
+                            <span class="font_size_12">给分组取名</span>
+                        </i>
+                        <i class="fa fa-user show_cursor text_center font_color_orange"><br />
+                            <span class="font_size_12">增添人员</span>
+                        </i>
+                        <a href="#" class="square_orange_btn font_size_18" style="float:right;">创建完成</a>
+                    </p>
+                    <button type="button" class="orange_btn" style="font-size:18px; margin-top:28px">未选学生</button>
+                    <button type="button" class="orange_btn" style="font-size:18px; margin-top:28px">已选学生</button>
+                    <div class="font_size_14" style="margin-bottom:13px; margin-top:28px; color:#787878;">
+                        <span>真实姓名：</span>
+                        <input type="text" class="cap_input_small border_color_black" />
+                        
+                        <span>学籍号：</span>
+                        <select id="select_name" class="cap_select">
+                            <option value="">201502023366</option>
+                            <option value="">201502023366</option>
+                        </select>
+
+                        <span>数据时间：</span>
+                        <select id="select_name" class="cap_select">
+                            <option value="">最近七天</option>
+                            <option value="">最近14天</option>
+                        </select>
+                        <button class="cap_orange_btn" type="button">查询</button>
+                    </div>
+
+                    <table class="gridtable" style="border-radius: 5px;">
+                            <tr class="fontsize_14 bg_gray">
+                                <td><span>选择</span><input type="checkbox" style="width:15px;height:15px;vertical-align: sub;" /></td>
+                                <td>考核对象</td>
+                                <td>所在层级</td>
+                                <td>学籍号</td>
+                                <td>
+                                    学习时间
+                                    <i class="fa fa-long-arrow-down font_color_green show_cursor"></i>
+                                    <i class="fa fa-long-arrow-up font_color_red show_cursor"></i> 
+                                </td>
+                                <td>
+                                    答题数
+                                    <i class="fa fa-long-arrow-down font_color_green show_cursor"></i>
+                                    <i class="fa fa-long-arrow-up font_color_red show_cursor"></i> 
+                                </td>
+                                <td>
+                                    正确率
+                                    <i class="fa fa-long-arrow-down font_color_green show_cursor"></i>
+                                    <i class="fa fa-long-arrow-up font_color_red show_cursor"></i> 
+                                </td>
+                                <td>
+                                    平均每天答题速度
+                                    <i class="fa fa-long-arrow-down font_color_green show_cursor"></i>
+                                    <i class="fa fa-long-arrow-up font_color_red show_cursor"></i> 
+                                </td>
+                                <td>操作</td>
+                            </tr>
+                            <tr class="fontsize_14">
+                                <td><input type="checkbox" /></td>
+                                <td>王二毛</td>
+                                <td>传媒学院</td>
+                                <td>2015020333</td>
+                                <td><span>10</span>分<span>20</span>秒</td>
+                                <td><span>80</span>题</td>
+                                <td class="font_color_green"><span>60</span>%</td>
+                                <td><span>5</span>秒</td>
+                                <td>
+                                    <a href="#" class="operate font_color_red">移除学习组</a>
+                                </td>
+                            </tr>
+                            <tr class="fontsize_14">
+                                <td><input type="checkbox" /></td>
+                                <td>王二毛</td>
+                                <td>传媒学院</td>
+                                <td>2015020333</td>
+                                <td><span>10</span>分<span>20</span>秒</td>
+                                <td><span>80</span>题</td>
+                                <td class="font_color_green"><span>60</span>%</td>
+                                <td><span>5</span>秒</td>
+                                <td>
+                                    <a href="#" class="operate font_color_red">移除学习组</a>
+                                </td>
+                            </tr>
+                            <tr class="fontsize_14">
+                                <td><input type="checkbox" /></td>
+                                <td>王二毛</td>
+                                <td>传媒学院</td>
+                                <td>2015020333</td>
+                                <td><span>10</span>分<span>20</span>秒</td>
+                                <td><span>80</span>题</td>
+                                <td class="font_color_green"><span>60</span>%</td>
+                                <td><span>5</span>秒</td>
+                                <td>
+                                    <a href="#" class="operate font_color_red">移除学习组</a>
+                                </td>
+                            </tr>
+                            <tr class="fontsize_14">
+                                <td><input type="checkbox" /></td>
+                                <td>王二毛</td>
+                                <td>传媒学院</td>
+                                <td>2015020333</td>
+                                <td><span>10</span>分<span>20</span>秒</td>
+                                <td><span>80</span>题</td>
+                                <td class="font_color_green"><span>60</span>%</td>
+                                <td><span>5</span>秒</td>
+                                <td>
+                                    <a href="#" class="operate font_color_red">移除学习组</a>
+                                </td>
+                            </tr>
+                            <tr class="fontsize_14">
+                                <td><input type="checkbox" /></td>
+                                <td>王二毛</td>
+                                <td>传媒学院</td>
+                                <td>2015020333</td>
+                                <td><span>10</span>分<span>20</span>秒</td>
+                                <td><span>80</span>题</td>
+                                <td class="font_color_red"><span>40</span>%</td>
+                                <td><span>5</span>秒</td>
+                                <td>
+                                    <a href="#" class="operate font_color_red">移除学习组</a>
+                                </td>
+                            </tr>
+                            <tr class="fontsize_14">
+                                <td><input type="checkbox" /></td>
+                                <td>王二毛</td>
+                                <td>传媒学院</td>
+                                <td>2015020333</td>
+                                <td><span>10</span>分<span>20</span>秒</td>
+                                <td><span>80</span>题</td>
+                                <td class="font_color_red"><span>40</span>%</td>
+                                <td><span>5</span>秒</td>
+                                <td>
+                                    <a href="#" class="operate font_color_red">移除学习组</a>
+                                </td>
+                            </tr>
+                            <tr class="fontsize_14">
+                                <td><input type="checkbox" /></td>
+                                <td>王二毛</td>
+                                <td>传媒学院</td>
+                                <td>2015020333</td>
+                                <td><span>10</span>分<span>20</span>秒</td>
+                                <td><span>80</span>题</td>
+                                <td class="font_color_red"><span>40</span>%</td>
+                                <td><span>5</span>秒</td>
+                                <td>
+                                    <a href="#" class="operate font_color_red">移除学习组</a>
+                                </td>
+                            </tr>
+                            <tr class="fontsize_14">
+                                <td><input type="checkbox" /></td>
+                                <td>王二毛</td>
+                                <td>传媒学院</td>
+                                <td>2015020333</td>
+                                <td><span>10</span>分<span>20</span>秒</td>
+                                <td><span>80</span>题</td>
+                                <td class="font_color_red"><span>40</span>%</td>
+                                <td><span>5</span>秒</td>
+                                <td>
+                                    <a href="#" class="operate font_color_green">加入学习组</a>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="text_right">
+                                <button type="button" class="square_orange_btn" style="font-size:18px; margin-top:28px">批量添加</button>
+                        </div>
+                </div>
+            </div>
+            </div>
+            <div class="mainbody_white_box" style="text-align:center">
+                <a href="" class="pages">首页</a>
+                <a href="" class="pages"><上一页</a>
+                <a href="" class="pages">1</a>
+                <a href="" class="pages pagescur">2</a>
+                <a href="" class="pages">3</a>
+                <a href="" class="pages">下一页></a>
+                <a href="" class="pages">尾页</a>
+            </div>
+        </div>
+
+    <div id="foot"></div>
+
+</body>
+<script type="text/javascript">
+$("#header").load("header.html");
+$("#left-navigation").load("left.html", function() {
+    $("ul.accordion>li:eq(2)").addClass('open').children().show().find('li:eq(2)').children().addClass('bcolor');
+});
+$("#foot").load("footer.html");
+
+$(".orange_btn").click(function(event) {
+    $(".orange_btn").css({
+        color: '#ee8844',
+        background: 'none'
+    });
+    $(this).css({
+        color: '#FFFFFF',
+        background: '#ee8844'
+    });
+});
+
+
+$(document).ready(function() {
+    $('#tab-container').easytabs();
+
+});
+
+</script>
+</html>

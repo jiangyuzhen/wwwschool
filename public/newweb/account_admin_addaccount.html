@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>账户管理>新增账户</title>
+</head>
+
+<body>
+<div id="header"></div>
+<div id="left-navigation"></div>
+<div id="mainbody">
+    <div class="mainbody_title_box">账户管理>新增账户</div>
+    <div class="mainbody_bottom" style="border:none">
+        <div class='tab-container'>
+            <div class='panel-container'>
+                <p style="font-size:24px; margin: -36px 0 20px 0;" class="font_color_black">请填写如下信息：</p>
+                <form action="#">
+                    <div class="main_bottom_graybox">
+                        <p><span class="info_tittle">教师真实姓名：</span><input type="text" class="in_name cap_input block_bcolor_gray border_color_gray" name="s_realname" /></p>
+                        <p><span class="info_tittle">手机号码：</span><input type="text" class="in_phone cap_input block_bcolor_gray border_color_gray" name="s_telephone" /></p>
+                        <p><span class="info_tittle">邮箱：</span><input type="text" class="in_email cap_input block_bcolor_gray border_color_gray" name="s_email" /></p>
+                        <p><span class="info_tittle">密码：</span><input type="password" class="in_password cap_input block_bcolor_gray border_color_gray" name="password" /></p>
+                        <div class='system_choose'>
+                                <span class="info_tittle">负责组织：</span>
+                                <div id="select_1" data-id="1" style="display:inline-block" class="select_system">
+                                <select name="category_1" id="category_1" onChange="change('category_1');" class="cap_select block_bcolor_gray system_1" style="font-size:18px; border-color:#cfcfcf;">
+                                    <option value="">请选择</option>
+                                </select>
+                                </div>
+                            <button type="button" class="orange_btn add_system">添加更多层级</button>
+                        </div>
+                    </div>
+                    <div style="text-align:center">
+                        <button type="button" class="square_orange_btn create_manager" style="font-size:24px; margin-right: 40px;">创建</button>
+                        <button type="button" class="square_orange_btn cancel" style="font-size:24px;">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="foot"></div>
+
+</body>
+<script type="text/javascript">
+ $("#header").load("header.html");
+        $("#left-navigation").load("left.html", function() {
+            $("ul.accordion>li:eq(7)").addClass('open');
+        });
+        $("#foot").load("footer.html");
+    function createManager(){
+        $('.create_manager').click(function(){
+            var s_realname=$('input[name="s_realname"]').val();
+            var password=$('input[name="password"]').val();
+            var s_email=$('input[name="s_email"]').val();
+            var s_telephone=$('input[name="s_telephone"]').val();
+            if(s_realname==''){$('input[name="s_realname"]').after('<span class="font_color_red wrong">姓名不能为空</span>')}
+            if(password==''){$('input[name="password"]').after('<span class="font_color_red wrong">密码不能为空</span>')}
+            if(s_email==''){$('input[name="s_email"]').after('<span class="font_color_red wrong">邮箱不能为空</span>')}
+            if(s_telephone==''){$('input[name="s_telephone"]').after('<span class="font_color_red wrong">手机号不能为空</span>')}
+            var system=new Array();
+            for (var i = 0; i < $('.select_system').length; i++) {
+                if($('.select_system:eq('+i+') select').eq(0).val()){
+                    system[i]=',';
+                    for (var j = 0; j < $('.select_system:eq('+i+') select').length; j++) {
+                        if($('.select_system:eq('+i+') select').eq(j).val()){
+                            system[i]+=$('.select_system:eq('+i+') select').eq(j).val()+',';
+                        }
+                    };
+                }
+            };
+            var wlen=$(".wrong").length;
+            var n=typeof($(".in_name").val());
+            var p=typeof($(".in_phone").val());
+            var e=typeof($(".in_email").val());
+            var w=typeof($(".in_password").val());
+            var sle=$('select').val();
+            if (wlen==0 && n!='undefined' && p!='undefined' && e!='undefined' && w!='undefined') {
+                    if(sle==''){
+                            alert("请选择负责组织");
+                    }else{
+                            ajaxPost('/curd_manager/addManager',{s_realname:s_realname,password:password,s_email:s_email,s_telephone:s_telephone,system:system},function(Data){
+                                if(Data.flag==1){
+                                    alert('新建教师成功');
+                                    window.location.href='/newweb/account_admin.html';
+                                }
+                            });
+                    }
+            } else{alert("请完善信息");}
+        });
+    }
+
+    function cancelCreate(){
+        $('.cancel').click(function(){
+            window.location.href='/newweb/account_admin.html';
+        });
+    }
+
+
+    $(function(){
+        getFirstSystemForm('#category_1');
+        infoValidate("in_name");
+        infoValidate("in_phone",function(){
+                var info=$('.in_phone').val();
+                var check=checkMobile(info);
+                if (check==0) {
+                    $('.in_phone').after('<span class="font_color_red wrong">请输入正确的手机号</span>');
+                } else{
+                    ajaxPost('/curd_manager/checkSignUp',{user_name:info},function(Data){
+                        if (Data.flag==1) {
+                            $('.in_phone').next().remove();
+                        } else{
+                            $('.in_phone').after('<span class="font_color_red wrong">该手机号已存在</span>');
+                        }
+                    },false);
+                }
+        });
+        infoValidate("in_email",function(){
+                var info=$('.in_email').val();
+                var check=checkEmail(info);
+                if (check==0) {
+                    $('.in_email').after('<span class="font_color_red wrong">该邮箱不合法</span>');
+                } else{
+                    ajaxPost('/curd_manager/checkSignUp',{user_name:info},function(Data){
+                        if (Data.flag==1) {
+                            $('.in_email').next().remove();
+                        } else{
+                            $('.in_email').after('<span class="font_color_red wrong">该邮箱已存在</span>');
+                        }
+                    },false);
+                }
+        });
+        infoValidate("in_password",function(){
+            var info=$('.in_password').val();
+            if (info.length<=5) {
+                $('.in_password').after('<span class="font_color_red wrong">密码位数过短</span>');
+            } 
+        });
+        addNewSystem();
+        createManager();
+        cancelCreate();
+    });
+
+
+    function getFirstSystemForm(id){
+        ajaxPost('/pubblico/getNextSystemForm',{parent_id:0},function(Data){
+            var data=Data.system_form;
+            var str='';
+            for(var i in data){
+                str+='<option value='+data[i].s_y_f_id+'>'+data[i].s_y_f_name+'</option>';
+            }
+            $(id).append(str);
+        });
+
+    }
+
+    function addNewSystem(){
+        $('.add_system').click(function(){
+            var system_num=$('.select_system:last').data('id');
+            var new_id='';
+            for (var i = 1; i <=system_num; i++) {
+                new_id+=1;
+            };
+            var str='<p><div id="select_'+(parseInt(system_num)+1)+'" data-id="'+(parseInt(system_num)+1)+'" style="display:inline-block" class="select_system"><select name="category_1'+new_id+'" id="category_1'+new_id+'" onChange="change(\'category_1'+new_id+'\');" class="cap_select block_bcolor_gray system_'+(parseInt(system_num)+1)+'" style="font-size:18px; border-color:#cfcfcf;"><option value="">请选择</option></select></div><button type="button" class="orange_btn del_system">删除</button></p>';
+
+            $('.system_choose').append(str);
+            getFirstSystemForm('#category_1'+new_id);
+        });
+    }
+
+    $(document).on('click','.del_system',function(){
+        $(this).prev().remove();
+        $(this).remove();
+    })
+
+    function change(val) {
+        var str = val; //select的id
+        var select_id=$('#'+str).parent().attr('id');
+        var data_id=$('#'+str).parent().data('id');
+        var num; //当前级数
+        var id; // 分类id
+        num = str.substr(9);
+        var nownum = parseInt(num) + 1; // 将字符串转换为数字
+        id = $("#" + str + "").val();
+        var r = /^[1-9]+[0-9]*]*$/;　//正整数
+        var new_id='';
+        for (var i = 1; i <=data_id; i++) {
+            new_id+=1;
+        };
+        if (!r.test(id)) {
+            //清空过时的选项
+            $(".system_"+data_id).each(function (index) {
+                if (parseInt(new_id)+index > num) {
+                    $(this).remove();
+                }
+            })
+
+            return false;
+        }
+        ajaxPost('/pubblico/getNextSystemForm',{parent_id:id},function(Data){
+            var result=Data.system_form;
+            if (result != 0) {
+                var html = "<select name='category_" + nownum + "' id='category_" + nownum + "' class='cap_select block_bcolor_gray system_"+data_id+"' onChange=change('category_" + nownum + "'); style='font-size:18px; border-color:#cfcfcf;'>";
+                html += "<option value=''>请选择分类 </option>";
+                var datas = eval(result);
+                $.each(datas, function (i, val) {
+                    html += "<option value='" + val.s_y_f_id + "' >" + val.s_y_f_name + "</option>";
+                });
+                html += "</select>";
+                //清空过时的选项
+                $(".system_"+data_id).each(function (index) {
+                    if (parseInt(new_id)+index > num) {
+                        $(this).remove();
+                    }
+                })
+                $("#"+select_id).append(html);
+            } else {
+                //清空过时的选项
+                $(".system_"+data_id).each(function (index) {
+                    if (parseInt(new_id)+index > num) {
+                        $(this).remove();
+                    }
+                })
+            }
+        });
+    }
+
+
+</script>
+</html>

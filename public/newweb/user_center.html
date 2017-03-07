@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>个人中心</title>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div id="left-navigation"></div>
+
+    <div id="mainbody">
+        <div class="mainbody_title_box">个人中心</div>
+        
+        <div class='tab-container'>
+            <ul class='etabs'>
+                <li class='tab active'><a >基本信息</a></li>
+            </ul>
+            <div class='panel-container'>
+                <div id="user_center_info" class="font_color_black font_size_18">
+                    <p style="margin:14px 0">真实姓名：<span class="user_name"></span>
+                        <i id="btn_edit" class="fa fa-edit font_color_orange"></i>
+                        <span id="nameform" hidden>
+                            <input name="username" type="text" class="cap_input border_color_gray" />
+                            <button id="btn_name_yes" type="button" class="cap_orange_btn search" >确认</button>
+                            <button id="btn_name_no" type="reset" class="cap_orange_btn search">取消</button>
+                        </span>
+                    </p>
+                    <p style="margin:14px 0">手机号：<span class="user_phone"></span></p>
+                    <p style="margin:14px 0">邮箱：<span class="user_email"></span></p>
+                    <p style="margin:14px 0">负责层级：<span class="user_system"></span></p>
+                </div>
+            </div>
+        </div>
+        <div class='tab-container'>
+            <ul class='etabs'>
+                <li class='tab active'><a>修改密码</a></li>
+            </ul>
+            <div class='panel-container'>
+                <div id="user_center_password">
+                    <form action="#">
+                    <p class="font_color_black">
+                        <span class="info_tittle">修改密码：</span>
+                        <input name="password" type="password" class="cap_input border_color_gray" />
+                    </p>
+                    <div class="text_center " style="margin-top:28px;">
+                        <button type="button" class="square_orange_btn modify_password font_size_18" >确认修改</button>
+                        <button type="reset" class="square_orange_btn modify_password_cancel font_size_18">取消</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+            
+    </div>
+
+    <div id="foot"></div>
+
+</body>
+<script type="text/javascript">
+$("#header").load("header.html");
+$("#left-navigation").load("left.html", function() {
+    $("ul.accordion>li:eq(5)").addClass('open');
+});
+$("#foot").load("footer.html");
+$("#btn_edit").click(function(event) {
+    $(this).hide();
+    $(".user_name").hide();
+    $("#nameform").show();
+    getBaseInfo();
+});
+$("#btn_name_yes").click(function(event) {
+    postBaseInfo();
+    $("#nameform").hide();
+    $("#btn_edit").show();
+    $(".user_name").show();
+    getBaseInfo();
+});
+$("#btn_name_no").click(function(event) {
+    $("#nameform").hide();
+    $(".user_name").show();
+    $("input[name='username']").val('');
+    $("#btn_edit").show();
+    getBaseInfo();
+});
+getBaseInfo();
+function getBaseInfo(){
+    ajaxPost('/my_center/getBaseInfo','',function(data){
+        var cen = '';
+        for(var i in data.system){
+            cen+= data.system[i]+'，';
+        }
+        cen=cen.substring(0,cen.length-1);
+        $(".user_name").text('').text(data.realname);
+        $("input[name='username']").val(data.realname);
+        $(".user_phone").text(data.telephone);
+        $(".user_email").text(data.email);
+        if (cen=='') {
+            $(".user_system").text('全部');
+        } else{
+            $(".user_system").text(cen);
+        }
+        
+    });
+}
+
+function postBaseInfo(){
+    var name=$("input[name='username']").val();
+    if (name.length>0) {
+        ajaxPost('/my_center/postBaseInfo',{realname: name},function(data){});
+    } else{
+         alert("名字不能为空");
+    }
+    
+}
+
+
+postPassword();
+function postPassword(){
+    $(".modify_password").click(function(event) {
+        var pw=$("input[name='password']").val();
+        var len=pw.length;
+        if (len>=6) {
+                ajaxPost('/my_center/postPassword',{password: pw},function(data){
+                if(data.flag==1){alert("密码修改成功")}
+            });
+        } else{
+                alert("密码位数应大于6位");
+        }
+    });
+     $(".modify_password").click(function(event) {
+        $("input[name='password']").val('');
+    });
+}
+</script>
+</html>

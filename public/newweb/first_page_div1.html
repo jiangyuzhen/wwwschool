@@ -1,0 +1,118 @@
+<p style="font-size:14px; color:#666666; margin:0 0 15px 0;">过去七天学生：</p>
+<div class="span_block block_bcolor_red">
+    <p style="margin:48px 0 5px 0">学生预测能得</p>
+
+    <p><span class="forecast-score" style="font-size:32px">0</span><span>分</span></p>
+</div>
+<div class="span_block block_bcolor_green">
+    <p style="margin:48px 0 5px 0">平均正确率</p>
+
+    <p><span class="accuracy" style="font-size:32px">0</span><span>%</span></p>
+
+    <p style="margin:15px 8px 0 0; text-align:right; font-size:14px" class="accuracy-change toshow"></p>
+    <div class="hoverblock">相比<span class="font_color_green">上一个七天</span>正确率<span class="ach"></span></div>
+</div>
+<div class="span_block block_bcolor_yellow">
+    <p style="margin:48px 0 5px 0">平均答题量</p>
+
+    <p><span class="total-question-num" style="font-size:32px">0</span><span>题</span></p>
+
+    <p style="margin:15px 8px 0 0; text-align:right; font-size:14px" class="total-question-num-change toshow"></p>
+    <div class="hoverblock">相比<span class="font_color_green">上一个七天</span>答题数<span class="tqnch"></span></div>
+</div>
+<div class="span_block block_bcolor_blue">
+    <p style="margin:48px 0 5px 0">平均练习时长</p>
+
+    <p><span class="practice-time" style="font-size:32px">0</span><span>min</span></p>
+
+    <p style="margin:15px 8px 0 0; text-align:right; font-size:14px" class="practice-time-change toshow"></p>
+    <div class="hoverblock">相比<span class="font_color_green">上一个七天</span>练习时长<span class="ptch"></span></div>
+</div>
+<div style="display:inline-block; width:74px;float:right;position:absolute;margin:10px 0 0 10px">
+    <a href="scoreadmin_preview.html" class="white_btn" style="margin-bottom:32px">
+        <i class="fa fa-th" style="font-size: 20px;"></i>
+
+        <p style="margin-top:3">成绩总览</p>
+    </a>
+    <a href="student_score_list.html" class="white_btn">
+        <i class="fa fa-file-text-o" style="font-size: 20px;"></i>
+
+        <p style="margin-top:5px">同学详情</p>
+    </a>
+</div>
+<script type="text/javascript">
+    $(function () {
+        getTotalData();
+    });
+
+    /**
+     * [getTotalData 综合概要----整体概要]
+     * @return {[type]} [description]
+     */
+    function getTotalData() {
+        ajaxPost('http://school.tiku365.cn/performance_manage/getTotalData', '', function (data) {
+            var forecast_score = data.forecast_score.toFixed(2);
+            var last_week_accuracy = (data.last_week.accuracy*100).toFixed(2);
+            var last_week_total_num = data.last_week.total_num.toFixed(2);
+            var last_week_pratice_time = (data.last_week.practice_time/60).toFixed(2);
+
+            var before_week_accuracy = (data.before_week.accuracy*100).toFixed(2);
+            var before_week_total_num = data.before_week.total_num.toFixed(2);
+            var before_week_pratice_time = (data.before_week.practice_time/60).toFixed(2);
+
+            var accuracy_change = (last_week_accuracy - before_week_accuracy).toFixed(2);
+            var total_num_change = (last_week_total_num - before_week_total_num).toFixed(2);
+            var practice_time_change = (last_week_pratice_time - before_week_pratice_time).toFixed(2);
+
+            $('.forecast-score').empty().append(forecast_score);
+            $('.accuracy').empty().append(last_week_accuracy);
+            $('.total-question-num').empty().append(last_week_total_num);
+            $('.practice-time').empty().append(last_week_pratice_time);
+
+            if(accuracy_change > 0){
+                $('.accuracy-change').empty().append("+" + accuracy_change + "%");
+            }else{
+                $('.accuracy-change').empty().append(accuracy_change + "%");
+            }
+            if(total_num_change > 0){
+                $('.total-question-num-change').empty().append("+" + total_num_change + "题");
+            }else{
+                $('.total-question-num-change').empty().append(total_num_change + "题");
+            }
+            if(practice_time_change > 0){
+                $('.practice-time-change').empty().append("+" + practice_time_change + "min");
+            }else{
+                $('.practice-time-change').empty().append(practice_time_change + "min");
+            }
+
+            var str1=checknum(accuracy_change);
+            var str2=checknum(total_num_change);
+            var str3=checknum(practice_time_change);
+            $(".ach").text(str1);
+            $(".tqnch").text(str2);
+            $(".ptch").text(str3);
+        });
+    }
+
+    $(".toshow").hover(function() {
+        $(this).next().show();
+    }, function() {
+        $(this).next().hide();
+    });
+    function checknum(num){
+        str='';
+        if(num>0){
+            str='增长'+num;
+        }
+        if(num<0){
+            str='减少'+num;
+        }
+        if(num==0){
+            str='没有变化';
+        }
+        return str;
+    }
+
+</script>
+
+</html>

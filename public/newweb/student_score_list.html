@@ -1,0 +1,305 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="js/jquery-1.9.1.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="plugin/left_nav/css/style.css" media="screen" type="text/css"/>
+    <script src="plugin/left_nav/js/index.js"></script>
+    <script src="plugin/tab_plugin/jquery.hashchange.min.js" type="text/javascript"></script>
+    <script src="plugin/tab_plugin/jquery.easytabs.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>同学成绩列表</title>
+</head>
+
+<body>
+<div id="header"></div>
+<div id="left-navigation"></div>
+<div id="mainbody">
+    <div class="mainbody_title_box">同学成绩列表<span class="system_name"></span></div>
+    <div class="mainbody_bottom" style="border:none">
+        <div class='tab-container'>
+            <div class='panel-container'>
+                <div style="margin-top:-50px; margin-bottom:13px; color:#787878; font-size:14px; ">
+                    <span>真实姓名：</span>
+                    <input name="name" type="text" class="cap_input_small border_color_black"/><br/>
+
+                    <span>&nbsp&nbsp&nbsp学籍号：</span>
+                    <input name="sno" type="text" class="cap_input_small border_color_black"/><br/>
+                    <span class="set_system" style="margin-right: 4px;" >所属层级：</span>
+                    <!--<div id="select" style="display:inline-block">-->
+                       <!-- -->
+                        <!--<select name="category_1" id="category_1" class="system cap_select"-->
+                                <!--onChange="change('category_1');">-->
+                            <!--<option value="">请选择</option>-->
+
+                        <!--</select>-->
+                    <!--</div>-->
+                    <br/>
+
+                    <span>数据时间：</span>
+                    <select id="select_datatime" class="cap_select" name="days">
+                        <option value="7">最近七天</option>
+                        <option value="30">最近三十天</option>
+                        <option value="60">最近六十天</option>
+                    </select>
+                    <button class="cap_orange_btn search" type="button">查询</button>
+                </div>
+                <table class="gridtable student_list">
+                    <tr class="fontsize_14 bg_gray">
+                        <td>考核对象</td>
+                        <td>所在层级</td>
+                        <td>学籍号</td>
+                        <td>
+                            练习时间
+                            <i class="order_by fa fa-long-arrow-down font_color_black show_cursor" order="desc"
+                               order_by="practice_time_order"></i>
+                            <i class="order_by fa fa-long-arrow-up font_color_black show_cursor" order="asc"
+                               order_by="practice_time_order"></i>
+                        </td>
+                        <td>
+                            答题数
+                            <i class="order_by fa fa-long-arrow-down font_color_black show_cursor" order="desc"
+                               order_by="total_num_order"></i>
+                            <i class="order_by fa fa-long-arrow-up font_color_black show_cursor" order="asc"
+                               order_by="total_num_order"></i>
+                        </td>
+                        <td>
+                            正确率
+                            <i class="order_by fa fa-long-arrow-down font_color_black show_cursor" order="desc"
+                               order_by="accuracy_order"></i>
+                            <i class="order_by fa fa-long-arrow-up font_color_black show_cursor" order="asc"
+                               order_by="accuracy_order"></i>
+                        </td>
+                        <td>
+                            平均答题速度
+                            <i class="order_by fa fa-long-arrow-down font_color_black show_cursor" order="desc"
+                               order_by="practice_speed_order"></i>
+                            <i class="order_by fa fa-long-arrow-up font_color_black show_cursor" order="asc"
+                               order_by="practice_speed_order"></i>
+                        </td>
+                        <td>操作</td>
+                    </tr>
+                    <!--<tr class="fontsize_14">-->
+                    <!--<td>王二毛</td>-->
+                    <!--<td>传媒学院</td>-->
+                    <!--<td>201502031122</td>-->
+                    <!--<td><span>10</span>分<span>20</span>秒</td>-->
+                    <!--<td><span>80</span>题</td>-->
+                    <!--<td><span class="font_color_red">46</span><span class="font_color_red">%</span></td>-->
+                    <!--<td><span>6</span>秒</td>-->
+                    <!--<td><a href="#" class="operate font_color_orange">查看详情</a></td>-->
+                    <!--</tr>-->
+                    <!--<tr class="fontsize_14">-->
+                    <!--<td>王二毛</td>-->
+                    <!--<td>传媒学院</td>-->
+                    <!--<td>201502031122</td>-->
+                    <!--<td>——</td>-->
+                    <!--<td>——</td>-->
+                    <!--<td>——</td>-->
+                    <!--<td>——</td>-->
+                    <!--<td><a href="#" class="operate font_color_orange">查看详情</a></td>-->
+                    <!--</tr>-->
+                    <!--<tr class="fontsize_14">-->
+                    <!--<td>王二毛</td>-->
+                    <!--<td>传媒学院</td>-->
+                    <!--<td>201502031122</td>-->
+                    <!--<td>——</td>-->
+                    <!--<td>——</td>-->
+                    <!--<td>——</td>-->
+                    <!--<td>——</td>-->
+                    <!--<td><a href="#" class="operate font_color_orange">查看详情</a></td>-->
+                    <!--</tr>-->
+                    <!--<tr class="fontsize_14">-->
+                    <!--<td>王二毛</td>-->
+                    <!--<td>传媒学院</td>-->
+                    <!--<td>201502031122</td>-->
+                    <!--<td><span>10</span>分<span>20</span>秒</td>-->
+                    <!--<td><span>80</span>题</td>-->
+                    <!--<td><span class="font_color_green">80</span><span class="font_color_green">%</span></td>-->
+                    <!--<td><span>6</span>秒</td>-->
+                    <!--<td><a href="#" class="operate font_color_orange">查看详情</a></td>-->
+                    <!--</tr>-->
+                    <!--<tr class="fontsize_14">-->
+                    <!--<td>王二毛</td>-->
+                    <!--<td>传媒学院</td>-->
+                    <!--<td>201502031122</td>-->
+                    <!--<td><span>10</span>分<span>20</span>秒</td>-->
+                    <!--<td><span>80</span>题</td>-->
+                    <!--<td><span class="font_color_red">46</span><span class="font_color_red">%</span></td>-->
+                    <!--<td><span>6</span>秒</td>-->
+                    <!--<td><a href="#" class="operate font_color_orange">查看详情</a></td>-->
+                    <!--</tr>-->
+                    <!--<tr class="fontsize_14">-->
+                    <!--<td>王二毛</td>-->
+                    <!--<td>传媒学院</td>-->
+                    <!--<td>201502031122</td>-->
+                    <!--<td><span>10</span>分<span>20</span>秒</td>-->
+                    <!--<td><span>80</span>题</td>-->
+                    <!--<td><span class="font_color_red">46</span><span class="font_color_red">%</span></td>-->
+                    <!--<td><span>6</span>秒</td>-->
+                    <!--<td><a href="#" class="operate font_color_orange">查看详情</a></td>-->
+                    <!--</tr>-->
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="mainbody_white_box show_pages" style="text-align:center">
+        <!--<a href="" class="pages">首页</a>-->
+        <!--<a href="" class="pages">-->
+        <!--<上一页-->
+        <!--</a>-->
+        <!--<a href="" class="pages">1</a>-->
+        <!--<a href="" class="pages pagescur">2</a>-->
+        <!--<a href="" class="pages">3</a>-->
+        <!--<a href="" class="pages">下一页></a>-->
+        <!--<a href="" class="pages">尾页</a>-->
+    </div>
+</div>
+
+
+<div id="foot"></div>
+
+</body>
+<script type="text/javascript">
+    $("#header").load("header.html");
+    $("#left-navigation").load("left.html", function () {
+        $("ul.accordion>li:eq(1)").addClass('open').children().show().find('li:eq(1)').children().addClass('bcolor');
+    });
+    $("#foot").load("footer.html");
+    line_color_change();
+    tableHoverEvent();
+    //表格列的颜色 交替显示
+    function line_color_change() {
+        var obj = $("tr");
+        obj.each(function (index, el) {
+            if (parseInt(index) % 2 != 0) {
+                $(this).addClass('bg_white');
+            }
+        });
+    }
+
+
+    $(function () {
+        searchPageStudent(1);
+        searchStudent();
+        orderSearch();
+        setSystem('.set_system',1);
+    });
+
+    // 列表 hover事件
+    function tableHoverEvent(){
+        $("tr").hover(function() {
+            $(this).addClass('bg_gray');
+        }, function() {
+            $(this).removeClass('bg_gray');
+        });
+    }
+
+    //添加分页按钮点击事件
+    function page_click() {
+        $(".pages").click(function () {
+            var page = $(this).attr("page-id");
+            searchPageStudent(page);
+        });
+    }
+
+    function orderSearch() {
+        $('.order_by').click(function () {
+            $('.order_by').removeClass('font_color_red');
+            $('.order_by').removeClass('this_order');
+            $(this).addClass('font_color_red');
+            $(this).removeClass('font_color_black');
+            $(this).addClass('this_order');
+            searchPageStudent(1);
+        })
+    }
+
+    function searchStudent() {
+        $('.search').click(function () {
+            $('.order_by').removeClass('font_color_red');
+            $('.order_by').removeClass('this_order');
+            searchPageStudent(1);
+        });
+    }
+
+    function searchPageStudent(page) {
+        var system = getUrlParam('system');
+        if (system) {
+            system = ',' + system + ',';
+            var system_name = getUrlParam('system_name');
+            $('.system_name').html('（' + system_name + '）');
+            $('#select').remove();
+        } else {
+
+            system = '';
+            if ($('#category_1').val()) {
+                system += ',';
+                for (var i = 1; i <= $('.system_1').length; i++) {
+                    if ($('#category_' + i).val()) {
+                        system += $('#category_' + i).val() + ',';
+                    }
+                }
+                ;
+            }
+        }
+        var name = $("input[name='name']").val();
+        var sno = $("input[name='sno']").val();
+        var days = $("select[name='days']").val();
+        $('.student_tr').empty();
+        var order = $('.this_order').attr('order');
+        var order_by = $('.this_order').attr('order_by');
+        if (typeof (order) != 'undefined') {
+            if (order_by == 'practice_time_order') {
+                getStudentList(page, name, sno, days, system, order, '', '', '');
+            } else if (order_by == 'total_num_order') {
+                getStudentList(page, name, sno, days, system, '', order, '', '');
+            } else if (order_by == 'accuracy_order') {
+                getStudentList(page, name, sno, days, system, '', '', order, '');
+            } else {
+                getStudentList(page, name, sno, days, system, '', '', '', order);
+            }
+        } else {
+            getStudentList(page, name, sno, days, system, '', '', '', '');
+        }
+    }
+
+    function getStudentList(pages, name, sno, days, system, practice_time_order, total_num_order, accuracy_order, practice_speed_order) {
+        ajaxPost('/group/getUserList', {
+            page: pages,
+            sno: sno,
+            days: days,
+            name: name,
+            system: system,
+            practice_time_order: practice_time_order,
+            total_num_order: total_num_order,
+            accuracy_order: accuracy_order,
+            practice_speed_order: practice_speed_order,
+        }, function (Data) {
+            var data = Data.user;
+            var page = Data.page;
+            var total_page = Data.total_page;
+            var str = '';
+            for (var i in data) {
+                var system_name = '';
+                for (var j in data[i].system_name) {
+                    system_name += '<p>' + data[i].system_name[j] + '<p>';
+                }
+                var strSno = '';
+                for (var j in data[i].sno) {
+                    strSno += '<p>' + data[i].sno[j] + '<p>';
+                }
+                str += '<tr class="fontsize_14 student_tr" user_id=' + data[i].user_id + '><td>' + data[i].user_realname + '</td><td>' + system_name + '</td><td>' + strSno + '</td><td><span>' + (data[i].practice_time / 60).toFixed(1) + '</span>分钟</td><td><span>' + (data[i].total_num / 1).toFixed(1) + '</span>题</td><td><span class="' + (data[i].accuracy * 100 <= 30 ? "font_color_red" : "") + '">' + (data[i].accuracy * 100).toFixed(1) + '%</span></td><td><span>' + (data[i].practice_speed / 1).toFixed(1) + '</span>秒</td><td><a target="_blank" href="/newweb/student_preview_div.html?student_id='+data[i].user_id+'&student_name='+data[i].user_realname+'" class="operate font_color_orange">查看详情</a></td></tr>';
+            }
+            $(".student_list").append(str);
+            line_color_change();
+            tableHoverEvent();
+            showPage(page, total_page)
+        });
+    }
+</script>
+</html>

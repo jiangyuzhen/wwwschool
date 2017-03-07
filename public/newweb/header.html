@@ -1,0 +1,34 @@
+
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+
+<div id="top">
+    <div id="navbar-top">
+        <div id="navbar-top-left" class="university-name">
+            大学
+        </div>
+        <div id="navbar-top-right">
+            <p class="logout"><span><i class="fa fa-power-off" style="margin-right:8px;"></i>退出登录</span></p>
+
+            <p class="user_info"> 您好，<span class="user-name">admin</span>
+                <span id="time">
+                    <script>
+                        document.getElementById('time').innerHTML=new Date().toLocaleString();
+                        setInterval("document.getElementById('time').innerHTML=new Date().toLocaleString();",1000);
+                    </script>
+                </span>
+            </p>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $('.logout').click(function () {
+            window.location.href = './index.html';
+        });
+        $('.university-name').html(getCookie('university_name'));
+        $('.user-name').html(getCookie('user_name'));
+    });
+</script>

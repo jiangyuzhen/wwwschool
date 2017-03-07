@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link rel="stylesheet" type="text/css" href="plugin/date_choose/jquery.datetimepicker.css"/>
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <script src="plugin/date_choose/jquery.datetimepicker.js"></script>
+    <script src="js/common.js"></script>
+    <title>测试管理>草稿</title>
+</head>
+
+<body>
+    
+    <div id="header"></div>
+    <div id="left-navigation"></div>
+    <div id="mainbody">
+        <div class="mainbody_title_box">测试管理>布置测试>设置发布时间</div>
+             <div class="mainbody_white_box" style="margin-bottom: -1px;">
+                <span>
+                    <button class="stepbutton">
+                        <i class="fa fa-user cur_orange"></i>
+                        <span>选择分组</span>
+                    </button>
+                    <hr />
+                    <button id="strp_img_first" class="stepbutton" disabled="disabled">
+                        <i class="fa fa-edit (alias) cur_orange"></i>
+                        <span>给测试取名</span>
+                    </button>
+                    <hr />
+                    <button id="strp_img_second" class="stepbutton" disabled="disabled">
+                        <i class="fa fa-database cur_orange"></i>
+                        <span>开始组卷</span>
+                    </button>
+                    <hr />
+                    <button id="strp_img_third" class="stepbutton" disabled="disabled">
+                        <i class="fa fa-search-plus cur_orange"></i>
+                        <span>试卷预览</span>
+                    </button>
+                    <hr />
+                    <button id="strp_img_fourth" class="stepbutton" disabled="disabled">
+                        <i class="fa fa-send cur_orange"></i>
+                        <span>发布试卷</span>
+                    </button>
+                </span>
+        </div>
+        <div class='tab-container'>
+                <div class='panel-container'>
+                    <div id="publish_settime">
+                            <p style="color:#666666; font-size:24px; text-align:left; margin:0 auto; padding-bottom: 30px;">设置测试时间</p>
+                            <div id="set_pubtime_box">
+                                <p style="margin-bottom:24px;">
+                                    <span>测试截止时间：</span>
+                                    <select id="choose_deadtime">
+                                        <option value="0">时间不限</option>
+                                        <option value="1">设置时间</option>
+                                    </select>
+                                    <input type="text" id="datetimepicker" placeholder="请选择截止时间" hidden />
+                                </p>
+                                <p>
+                                <span style="margin-left:35px;" >测试时间：</span>
+                                <select id="choose_time">
+                                    <option value="0">时间不限</option>
+                                    <option value="1">设置时间</option>
+                                </select>
+                                <input type="text" id="testlasttime" placeholder="请填写测试时长" hidden/>
+                                <span hidden>分钟</span>
+                                </p>
+                            </div>
+                            <p class="text_center">
+                                <a class="show_cursor" id="save_draft" statue-id="2" test-type="1">保存为草稿</a>
+                                <a class="show_cursor" id="publish_now"statue-id="1" test-type="1">立即发布试卷</a>
+                            </p>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <div id="foot"></div>
+</body>
+
+<script type="text/javascript">
+$("#header").load("header.html");
+    $("#left-navigation").load("left.html", function() {
+        $("ul.accordion>li:eq(2)").addClass('open').children().show().find('li:eq(1)').children().addClass('bcolor');
+    });
+$("#foot").load("footer.html");
+
+// 日期选择js
+var logic = function( currentDateTime ){
+    if( currentDateTime.getDay()==6 ){
+        this.setOptions({
+            minTime:'11:00'
+        });
+    }else
+        this.setOptions({
+            minTime:'8:00'
+        });
+};
+$('#datetimepicker').datetimepicker({
+    onChangeDateTime:logic,
+    onShow:logic,
+    lang:"ch",           //语言选择中文
+});
+// 是否设置测试时长
+$("#choose_time").change(function() {
+    var selectValue = $("#choose_time").val();
+    if(selectValue==1){
+        $("#testlasttime").show();
+        $("#testlasttime").next().show();
+    }else{
+        $("#testlasttime").hide();
+        $("#testlasttime").next().hide();
+    }
+});
+
+// 是否设置测试截止时间
+$("#choose_deadtime").change(function() {
+    var selectValue = $("#choose_deadtime").val();
+    if(selectValue==1){
+        $("#datetimepicker").show();
+    }else{
+        $("#datetimepicker").hide();
+    }
+});
+
+/*-----------------js获取GET参数--------------------*/
+function getPar(par){
+    //获取当前URL
+    var local_url = document.location.href; 
+    //获取要取得的get参数位置
+    var get = local_url.indexOf(par +"=");
+    if(get == -1){
+        return false;   
+    }   
+    //截取字符串
+    var get_par = local_url.slice(par.length + get + 1);    
+    //判断截取后的字符串是否还有其他get参数
+    var nextPar = get_par.indexOf("&");
+    if(nextPar != -1){
+        get_par = get_par.slice(0, nextPar);
+    }
+    return get_par;
+}
+/*-------------------------------------------------------*/
+var testid=getPar('testid');
+var quet_id_str='';
+get_questionid_ajax(testid);
+
+get_testtime_ajax(testid);
+
+//获取questionid
+function get_questionid_ajax(testid){
+    $.ajax({
+        url:'/test/getTestQuestion',
+        type: 'POST',
+        dataType: 'json',
+        data: {test_id:testid},
+        success:function(json){
+            var data=json.Data;
+            var str='';
+            for(var i in data){
+                str+=data[i].question_id;
+                str+=',';
+            }
+                str=str.substring(0,str.length-1);
+                quet_id_str+=str;
+        }
+    });
+}
+
+// 获取之前设置的发布时间
+function get_testtime_ajax(testid){
+    $.ajax({
+        url:'/test/getTestTime',
+        type: 'POST',
+        dataType: 'json',
+        data: {test_id:testid},
+        success:function(json){
+            console.log(json);
+        }
+    });
+}
+
+// 提交发布时间
+function submit_time_ajax(endtime, id, starttime, duration){
+    $.ajax({
+        url:'/test/setTestTime',
+        type: 'POST',
+        async:false,
+        dataType: 'json',
+        data: {test_end_time:endtime,test_id:id,test_start_time:starttime,test_time:duration},
+        success:function(json){
+            // var flag=json.Data.flag;
+            // if (flag==0) {
+            //     alert("设置发布时间失败，请重新填写");
+            // } 
+        }
+    });
+}
+
+// 提交题目规则 状态 
+function submit_status_ajax(qid,sta,testid){
+    $.ajax({
+        url:'/test/modifyTestQuestion',
+        type: 'POST',
+        async:false,
+        dataType: 'json',
+        data: {question_id_str:qid,status:sta,test_id:testid},
+        success:function(json){
+            // var  flag=json.Data.flag;
+            // if (flag==0) {
+            //     alert("设置发布时间失败，请重新填写");
+            // } 
+        }
+    });
+}
+
+
+$("#save_draft").click(function(event) {
+     if(confirm("确定要保存为草稿吗？"))
+    {
+          var selectdeadtime = $("#choose_deadtime").val();
+        var  end;
+        if (selectdeadtime==0) {
+            end=0;
+        } else{
+            end=DateToUnix($("#datetimepicker").val());
+        }
+        var selectValue = $("#choose_time").val();
+        var  dura;
+        if (selectValue==0) {
+            dura=0;
+        } else{
+            dura=parseInt($("#testlasttime").val());
+        }
+        submit_time_ajax(end, testid, 0, dura);
+        submit_status_ajax(quet_id_str,2,testid);
+        location.href ="check_exam.html";
+    }
+});
+
+$("#publish_now").click(function(event) {
+     if(confirm("确定要立即发布测试吗？"))
+    {
+        var selectdeadtime = $("#choose_deadtime").val();
+        var  end;
+        if (selectdeadtime==0) {
+            end=0;
+        } else{
+            end=DateToUnix($("#datetimepicker").val());
+        }
+        var selectValue = $("#choose_time").val();
+        var  dura;
+        if (selectValue==0) {
+            dura=0;
+        } else{
+            dura=parseInt($("#testlasttime").val());
+        }
+        submit_time_ajax(end, testid, 0, dura);
+        submit_status_ajax(quet_id_str,1,testid);
+        location.href ="check_exam.html";
+    }
+    
+});
+function compareTime(sel){
+    var now=CurTime();
+    if(sel<now){
+        alert("测试截止时间必须大于当前时间，请重新选择");
+        return 0;
+    }
+}
+</script>
+
+</html>

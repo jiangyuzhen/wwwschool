@@ -1,0 +1,100 @@
+<script src="plugin/left_nav/js/jquery.js"></script>
+<link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="plugin/left_nav/css/style.css" media="screen" type="text/css"/>
+<script src="plugin/left_nav/js/index.js"></script>
+<script src="js/common.js"></script>
+
+
+<div id="left">
+    <ul id="accordion" class="accordion">
+        <li>
+            <a href="first_page.html" class="left_nav_first">
+                <div class="link"><i class="fa fa-home"></i>首页</div>
+            </a>
+        </li>
+        <li>
+            <div class="link"><i class="fa fa-bar-chart"></i>成绩管理<i class="fa fa-chevron-down"></i></div>
+            <ul class="submenu">
+                <li><a href="scoreadmin_preview.html">成绩总览</a></li>
+                <li><a href="student_score_list.html">同学成绩列表</a></li>
+            </ul>
+        </li>
+        <li>
+            <div class="link"><i class="fa fa-database"></i>测试管理<i class="fa fa-chevron-down"></i></div>
+            <ul class="submenu">
+                <li><a href="#">查看测试</a></li>
+                <li><a href="#">布置测试</a></li>
+                <li><a href="#">学生测试列表</a></li>
+                <li><a href="#">分组管理</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="class_admin.html" class="left_nav_first" id="left_nav4">
+                <div class="link"><i class="fa fa-users"></i>班级管理</div>
+            </a>
+        </li>
+        <li>
+            <a href="teacher_admin.html" class="left_nav_first" id="left_nav5">
+                <div class="link"><i class="fa fa-user"></i>教师管理</div>
+            </a>
+        </li>
+        <li>
+            <a href="system_construction.html" class="left_nav_first" id="left_nav6">
+                <div class="link"><i class="fa fa-sitemap"></i>体系建设</div>
+            </a>
+        </li>
+        <li>
+            <a href="account_admin.html" class="left_nav_first" id="left_nav7">
+                <div class="link"><i class="fa fa-cog"></i>账户管理</div>
+            </a>
+        </li>
+    </ul>
+</div>
+<script type="text/javascript">
+    // // 左侧导航 只有一层的 点击事件 颜色变化
+    // $(".left_nav_first").click(function (event) {
+    //     $(".left_nav_first").find('div').css({color: '#4D4D4D',}).find('i').css({color: '#4D4D4D',});
+    //     $(this).find('div').css({color: '#b63b4d',}).find('i').css({color: '#b63b4d',});
+    // });
+
+    // // 左侧导航 有两层的 点击事件 颜色变化
+    // $(".submenu a").click(function (event) {
+    //     $(".submenu a").removeClass('bcolor');
+    //     $(this).addClass('bcolor');
+    // });
+    // $("#left-navigation").load("left.html", function () {
+    //     $("ul.accordion>li:eq(1)").addClass('open').children().show().find('li:eq(1)').children().addClass('bcolor');
+    // });
+    // $("#left-navigation").load("left.html", function() {
+    //     $("ul.accordion>li:eq(0)").addClass('open');
+    // });
+    // 
+    jQuery.noConflict(); //将$符所有权剔除
+
+    var left_bar = getCookie('left_bar');
+    left_bar = base64_decode(left_bar);
+    for(var i=left_bar.length-1;i>=0;i--){
+        if(left_bar[i]==']'){
+            left_bar=left_bar.substr(0,i+1);
+            break;
+        }
+    }
+    var left_bar = eval('(' + left_bar + ')');
+    var str = '';
+
+    for (var i in left_bar) {
+        if (typeof(left_bar[i]['son']) != 'undefined') {
+            str += '<li><div class="link"><i class="fa '+left_bar[i]['icon']+'"></i>'+left_bar[i]['name']+'<i class="fa fa-chevron-down"></i></div>';
+            str += '<ul class="submenu">';
+            for (var j in left_bar[i]['son']) {
+                str += '<li><a href="' + left_bar[i]['son'][j]['url'] + '">' + left_bar[i]['son'][j]['name'] + '</a></li>';
+            }
+            str += '</ul></li>';
+        }else{
+            str +='<li><a href="' + left_bar[i]['url'] + '" class="left_nav_first"><div class="link"><i class="fa ' + left_bar[i]['icon'] + '"></i>' + left_bar[i]['name'] + '</div></a></ul>';
+        }
+    }
+
+        $('#accordion').empty();
+    $('#accordion').append(str);
+</script>

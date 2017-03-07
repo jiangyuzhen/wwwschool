@@ -1,0 +1,368 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.scrollbox.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>查看学习情况(正确率详情)</title>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div id="left-navigation"></div>
+    <div id="mainbody">
+        <div class="mainbody_title_box">测试管理>查看测试>测试名称>正确率</div>
+        <div class='tab-container'>
+            <div class='panel-container'>
+                    <P id="show_page">
+                        <span id="rank_now" style="color:#ee8844;font-size:36px;"></span>/
+                        <span id="rank_sum"></span>
+                    </P>
+                    <div id="show_solution">
+                        <ul id="question_analysis">
+                            <!-- <li>
+                    <div class="capsule">1</div>
+                    <div class="capsule">马克思主义</div>
+                    <div class="capsule">3分</div>
+                    <div class="capsule">2014广州省考真题</div>
+                    <p>1. 此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容。</p>
+                    <p>A. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>B. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>C. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>解析：解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析：解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容。</p>
+                </li>
+                <li>
+                    <div class="capsule">2</div>
+                    <div class="capsule">马克思主义</div>
+                    <div class="capsule">3分</div>
+                    <div class="capsule">2014广州省考真题</div>
+                    <p>2. 此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容。</p>
+                    <p>A. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>B. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>C. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>解析：解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容。</p>
+                </li>
+                <li>
+                    <div class="capsule">3</div>
+                    <div class="capsule">马克思主义</div>
+                    <div class="capsule">3分</div>
+                    <div class="capsule">2014广州省考真题</div>
+                    <p>3. 此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容。</p>
+                    <p>A. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>B. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>C. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>D. 选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容</p>
+                    <p>解析：解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容。</p>
+                </li> -->
+                        </ul>
+                    </div>
+                    <div id="backward" class="circle_button" style="float:left; margin-top:-260px;">< </div>
+                            <div id="forward" class="circle_button" style="float:right; margin-top:-260px;"> > </div>
+                            <div id="show_count">
+                                <ul id="question_tatistics">
+                                    <!-- <li>
+                        <p style="font-size:14px;">答案统计</p>
+                        <p>
+                            正确答案是 <span style="font-size:24px;color:#469e4b;">A</span>
+                            <br/>
+                            <span>答对人数：20人    正确率：35%</span>
+                        </p>
+                        <p><span style="color:#469e4b;">A</span>. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>B. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子 张三 李四</p>
+                        <p>C. 20人（35%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>D. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                    </li>
+                    <li>
+                        <p style="font-size:14px;">答案统计</p>
+                        <p>
+                            正确答案是 <span style="font-size:24px;color:#469e4b;">B</span>
+                            <br/>
+                            <span>答对人数：20人    正确率：35%</span>
+                        </p>
+                        <p><span style="color:#469e4b;">B</span>. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>B. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子 张三 李四</p>
+                        <p>C. 20人（35%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>D. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                    </li>
+                    <li>
+                        <p style="font-size:14px;">答案统计</p>
+                        <p>
+                            正确答案是 <span style="font-size:24px;color:#469e4b;">C</span>
+                            <br/>
+                            <span>答对人数：20人    正确率：35%</span>
+                        </p>
+                        <p><span style="color:#469e4b;">C</span>. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>B. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子 张三 李四</p>
+                        <p>C. 20人（35%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>D. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>D. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>D. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>D. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>D. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>D. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>D. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>D. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>D. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>D. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>D. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>D. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子</p>
+                        <p>D. 33人（45%） 张三 李四 王麻子 张三 李四 王麻子</p>
+
+                    </li> -->
+                                </ul>
+                            </div>
+                </div>
+            </div>
+        </div>
+        <div id="foot"></div>
+</body>
+<script type="text/javascript">
+$("#header").load("header.html");
+    $("#left-navigation").load("left.html", function() {
+        $("ul.accordion>li:eq(2)").addClass('open').children().show().find('li:eq(0)').children().addClass('bcolor');
+    });
+$("#foot").load("footer.html");
+
+
+// 统计数据 滚动
+$('#show_count').scrollbox({
+    distance: 'auto',
+    autoPlay: false,
+    speed: 16,
+});
+// 题目详解滚动
+$('#show_solution').scrollbox({
+    distance: 'auto',
+    autoPlay: false,
+    speed: 16,
+});
+
+// 点击左右按钮 题库滚动 并且题数变动
+$('#backward').click(function() {
+    $('#show_solution').trigger('backward');
+    $('#show_count').trigger('backward');
+    var s = $("#rank_sum").text();
+    var sum = parseInt(s);
+    var n = $("#rank_now").text();
+    var num = parseInt(n) - 1;
+    if (num == 0) {
+        $("#rank_now").text(sum);
+    } else {
+        $("#rank_now").text(num);
+    }
+});
+$('#forward').click(function() {
+    $('#show_solution').trigger('forward');
+    $('#show_count').trigger('forward');
+    var s = $("#rank_sum").text();
+    var sum = parseInt(s) + 1; //判断是否为总数加一
+    var n = $("#rank_now").text();
+    var num = parseInt(n) + 1;
+    if (num == sum) {
+        $("#rank_now").text(1);
+    } else {
+        $("#rank_now").text(num);
+    }
+});
+
+
+/*-----------------js获取GET参数--------------------*/
+function getPar(par) {
+    //获取当前URL
+    var local_url = document.location.href;
+    //获取要取得的get参数位置
+    var get = local_url.indexOf(par + "=");
+    if (get == -1) {
+        return false;
+    }
+    //截取字符串
+    var get_par = local_url.slice(par.length + get + 1);
+    //判断截取后的字符串是否还有其他get参数
+    var nextPar = get_par.indexOf("&");
+    if (nextPar != -1) {
+        get_par = get_par.slice(0, nextPar);
+    }
+    return get_par;
+}
+/*-------------------------------------------------------*/
+var testid = getPar('testid');
+var quesid = getPar('quesid');
+var arr = get_queslist_ajax(testid);
+show_question_analysis(arr.arr_que, quesid, testid);
+
+// 把题目和做题统计显示在框框中 
+function show_question_analysis(arr, qid, tid) {
+    $("#rank_sum").empty().text(arr.length);
+    $("#question_tatistics").empty();
+    for (var i in arr) {
+        if (arr[i] == qid) {
+            var num = parseInt(i) + 1;
+            $("#rank_now").empty().text(num);
+            getqueData_ajax(arr[i]);
+            for (var j = num; j < arr.length; j++) {
+                getqueData_ajax(arr[j]);
+            }
+            for (var k = 0; k < i; k++) {
+                getqueData_ajax(arr[k]);
+            }
+        }
+    }
+    var node = $(".li_test");
+    node.each(function(index, el) {
+        var quesId = $(this).attr('que-id');
+        getstaticData_ajax(quesId, tid);
+    });
+
+}
+// 获取题目
+function getqueData_ajax(qid) {
+    $.ajax({
+        url: '/pubblico/getQuestion',
+        type: 'POST',
+        dataType: 'json',
+        async: false,
+        data: {
+            question_id_str: qid
+        },
+        success: function(json) {
+            data = json.Data[0];
+            var label_str = '';
+            var str = '';
+            for (var i in data.label) {
+                label_str += "<div class='capsule'>" + data.label[i] + "</div>";
+            }
+            //判断是否为材料题
+            if (data.question_materia_detail) {
+                str += "<li class='li_test' que-id='" + qid + "'>" + label_str + "<p>" + data.question_materia_detail + "</p><p>" + data.question_detail + "</p><p class='c_order' org-id='" + data.choose[0]['original_order'] + "'>A. " + data.choose[0]['detail'] + "</p><p class='c_order' org-id='" + data.choose[1]['original_order'] + "'>B. " + data.choose[1]['detail'] + "</p><p class='c_order' org-id='" + data.choose[2]['original_order'] + "'>C. " + data.choose[2]['detail'] + "</p><p class='c_order' org-id='" + data.choose[3]['original_order'] + "'>D. " + data.choose[3]['detail'] + "</p><p>" + data.question_analysis + "</p></li>";
+            } else {
+                str += "<li class='li_test' que-id='" + qid + "'>" + label_str + "<p>" + data.question_detail + "</p><p class='c_order' org-id='" + data.choose[0]['original_order'] + "'>A. " + data.choose[0]['detail'] + "</p><p class='c_order' org-id='" + data.choose[1]['original_order'] + "'>B. " + data.choose[1]['detail'] + "</p><p class='c_order' org-id='" + data.choose[2]['original_order'] + "'>C. " + data.choose[2]['detail'] + "</p><p class='c_order' org-id='" + data.choose[3]['original_order'] + "'>D. " + data.choose[3]['detail'] + "</p><p>" + data.question_analysis + "</p></li>";
+            }
+            $("#question_analysis").append(str);
+        }
+    });
+}
+
+// 获取做题统计信息
+function getstaticData_ajax(quesid, testid) {
+    $.ajax({
+        url: '/test_detail/getGroupQuestionStatisticsDetail',
+        type: 'POST',
+        dataType: 'json',
+        async: false,
+        data: {
+            test_id: testid,
+            question_id: quesid
+        },
+        success: function(json) {
+            var data = json.Data;
+            console.log(data);
+            var cho = json.Data.choose_detail;
+            var do_all_num = parseInt(json.Data.total_num);
+            var accuracy;
+            if (parseInt(data.total_num) == 0) {
+                accuracy = 0;
+            } else {
+                accuracy = parseInt(data.did_right_num) / parseInt(data.total_num) * 100;
+            }
+            str = '';
+            var choose = $("li[que-id='" + quesid + "']").find('.c_order');
+            str += "<li qid='" + quesid + "'><p style='font-size:14px;'>答案统计</p>";
+            choose.each(function(index, el) {
+                var code = $(this).attr("org-id");
+                if (code == 0) {
+                    if (index == 0) {
+                        str += "<p>正确答案是 <span style='font-size:24px;color:#469e4b;'>A</span><br/><span>答对人数：" + data.did_right_num + "人    正确率：" + accuracy + "%</span></p>"
+                    }
+                    if (index == 1) {
+                        str += "<p>正确答案是 <span style='font-size:24px;color:#469e4b;'>B</span><br/><span>答对人数：" + data.did_right_num + "人    正确率：" + accuracy + "%</span></p>"
+                    }
+                    if (index == 2) {
+                        str += "<p>正确答案是 <span style='font-size:24px;color:#469e4b;'>C</span><br/><span>答对人数：" + data.did_right_num + "人    正确率：" + accuracy + "%</span></p>"
+                    }
+                    if (index == 3) {
+                        str += "<p>正确答案是 <span style='font-size:24px;color:#469e4b;'>D</span><br/><span>答对人数：" + data.did_right_num + "人    正确率：" + accuracy + "%</span></p>"
+                    }
+                }
+            });
+            choose.each(function(index, el) {
+                var strkey;
+                if (index == 0) {
+                    strkey = "A";
+                }
+                if (index == 1) {
+                    strkey = "B";
+                }
+                if (index == 2) {
+                    strkey = "C";
+                }
+                if (index == 3) {
+                    strkey = "D";
+                }
+                var code = $(this).attr("org-id");
+                var cho_data = cho[code];
+                var arr_name = cho_data.choose_user;
+                var str_name = '';
+                var per_a = parseInt(cho_data.choose_num) / do_all_num * 100;
+                for (var i in arr_name) {
+                    str_name += "<span>" + arr_name[i] + "</span>"
+                }
+                str += "<p>" + strkey + ". " + cho_data.choose_num + "人（" + per_a + "%）</br>" + str_name + "</p>";
+            });
+            str += "</li>";
+            $("#question_tatistics").append(str);
+        }
+
+    });
+}
+
+
+// 获取三级知识点id和名称 题目id 
+function get_queslist_ajax(testid) {
+    var arrMune = new Array();
+    var arrName = new Array();
+    var arrQues = new Array();
+    $.ajax({
+        url: '/test_detail/getGroupQuestionStatistics',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            test_id: testid
+        },
+        async: false,
+        success: function(json) {
+            var data = json.Data;
+            for (var i in data) {
+                arrMune[i] = data[i].menu_id;
+                arrName[i] = data[i].menu_name;
+                arrQues[i] = data[i].question_id;
+            }
+        }
+    });
+    return {
+        'arr_menu': arrMune,
+        'arr_name': arrName,
+        'arr_que': arrQues
+    };
+}
+</script>
+
+</html>

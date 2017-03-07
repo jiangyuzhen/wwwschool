@@ -1,0 +1,759 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link rel="stylesheet" type="text/css" href="plugin/date_choose/jquery.datetimepicker.css"/>
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <script src="plugin/date_choose/jquery.datetimepicker.js"></script>
+    <title>测试管理>布置测试</title>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div id="left-navigation"></div>
+    <div id="mainbody">
+    <div class="mainbody_title_box">测试管理>布置测试</div>
+        <div class="mainbody_white_box" style="margin-bottom: -1px;">
+        <span>
+                <button class="stepbutton" disabled="disabled">
+                    <i class="fa fa-user cur_orange"></i>
+                    <span>选择分组</span>
+                </button>
+                <hr />
+                <button id="strp_img_first" class="stepbutton show_cursor" disabled="disabled">
+                    <i class="fa fa-edit (alias) cur_orange"></i>
+                    <span>给测试取名</span>
+                </button>
+                <hr />
+                <button id="strp_img_second" class="stepbutton" disabled="disabled">
+                    <i class="fa fa-database block_bcolor_black"></i>
+                    <span>开始组卷</span>
+                </button>
+                <hr />
+                <button id="strp_img_third" class="stepbutton" disabled="disabled">
+                    <i class="fa fa-search-plus block_bcolor_black"></i>
+                    <span>试卷预览</span>
+                </button>
+                <hr />
+                <button id="strp_img_fourth" class="stepbutton" disabled="disabled">
+                    <i class="fa fa-send block_bcolor_black"></i>
+                    <span>发布试卷</span>
+                </button>
+        </span>
+                <span id="group_id" hidden></span>
+                <!-- <span id="group_name" hidden></span>
+                <span id="group_remark" hidden></span> -->
+                <span id="test_name" hidden></span>
+                <span id="menu_id_str" hidden></span>&nbsp;
+                <span id="question_id_str" hidden></span>&nbsp;
+                <span id="question_num_str" hidden></span>&nbsp;
+                <span id="rule_id" hidden></span>&nbsp;
+                <span id="test_id" hidden></span>&nbsp;
+                <button id="to_fourthstep_button" type="button" class="square_step_btn block_bcolor_orange font_size_18 show_cursor" style="float:right" hidden>下一步</button>
+        </div>
+        <div id="make_name" class="mainbody_bottom">
+                <div class='tab-container'>
+                    <div class='panel-container text_center'>
+                        <p class="font_size_38 font_color_black" style="margin-top:40px">给本次测试取个名字</p>
+                        <form id="nameform">
+                        <p><input type="text" class="newgroup_input border_color_black" /></p>
+                        <p>
+                        <button id="to_secondstep_button" disabled="disabled" type="button" class="square_step_btn block_bcolor_black font_size_18 show_cursor">下一步</button>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="secondstep" hidden>
+        <div id="make_paper">
+        <div class='tab-container'>
+                <div class='panel-container'>
+                    <ul id="myul" class="border_color_gray"></ul>
+                    <p class="font_size_14 font_color_black text_right" style="margin-top:10px;">
+                        总出题数：
+                        <span id="test_count_sum" class="font_color_orange font_size_18">0</span>
+                        <span class="font_color_orange font_size_18">题</span>
+                    </p>
+                    <p class="text_center">
+                        <button id="to_thirdstep_button" disabled="disabled" type="button" class="square_step_btn block_bcolor_black font_size_18 show_cursor">下一步</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='tab-container' id="thirdstep1" hidden>
+        <div class='panel-container' id="thirdstep2" hidden>
+        <div id="thirdstep" hidden>
+        <!-- <div class="data_object">
+            <p class="title_num"><span>2</span></p>
+            <div class="content">
+                <p>题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容此处为题目内容（）。
+                </p>
+                <p>
+                    <span>A.</span>
+                    <span>选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项</span>
+                </p>
+                <p>
+                    <span>B.</span>
+                    <span>选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项</span>
+                </p>
+                <p>
+                    <span>C.</span>
+                    <span>选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项</span>
+                </p>
+                <p>
+                    <span>D.</span>
+                    <span>选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项内容选项</span>
+                </p>
+                <p class="checkdetail">
+                    <span class="showdetail">查看详情</span>
+                </p>
+                <div class="details">
+                    <p>
+                        <div class="capsule" style="margin:0;color:#FFFFFF">马克思主义</div>
+                    </p>
+                    <p>
+                        <span>解析：</span>
+                        <span>解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容解析内容。</span>
+                    </p>
+                </div>
+            </div>
+            
+        </div> -->
+        </div>
+                <a href="javascript:scroll(0,0)" class="font_color_black gototop">
+                    <i class="fa fa-angle-double-up" style="font-size: 40px;"></i>
+                    <p class="font_size_12" style="margin-top:3">回到顶部</p>
+                </a>
+        </div>
+    </div>
+    <div class='tab-container' id="publish_settime1" hidden>
+        <div class='panel-container' id="publish_settime2" hidden>
+            <div id="publish_settime"  hidden>
+                    <p style="color:#666666; font-size:24px; text-align:left; margin:0 auto; padding-bottom: 30px;">设置测试时间</p>
+                    <div id="set_pubtime_box">
+                        <p style="margin-bottom:24px;">
+                            <span>测试截止时间：</span>
+                            <select id="choose_deadtime">
+                                <option value="0">时间不限</option>
+                                <option value="1">设置时间</option>
+                            </select>
+                            <input type="text" id="datetimepicker" placeholder="请选择截止时间" hidden />
+                        </p>
+                        <p>
+                        <span style="margin-left:35px;" >测试时长：</span>
+                        <select id="choose_time">
+                            <option value="0">时间不限</option>
+                            <option value="1">设置时间</option>
+                        </select>
+                        <input type="text" id="testlasttime" placeholder="请填写测试时长" hidden/>
+                        <span hidden>分钟</span>
+                        </p>
+                    </div>
+                    <p class="text_center">
+                        <a class="show_cursor" id="save_draft" statue-id="2" test-type="1">保存为草稿</a>
+                        <a class="show_cursor" id="publish_now"statue-id="1" test-type="1">立即发布试卷</a>
+                    </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="foot"></div>
+</body>
+<script type="text/javascript">
+$("#header").load("header.html");
+    $("#left-navigation").load("left.html", function() {
+        $("ul.accordion>li:eq(2)").addClass('open').children().show().find('li:eq(1)').children().addClass('bcolor');
+    });
+$("#foot").load("footer.html");
+
+var getgroupid=getUrlParam("groupid");
+$("#group_id").text(getgroupid);
+
+
+//布置测试 给卷子起名字 按钮可按效果
+    $("#nameform :text").on("input",function(evt){
+     if($(this).val().trim().length){
+        $("#to_secondstep_button").removeAttr("disabled");
+        $("#to_secondstep_button").removeClass('block_bcolor_black').addClass('block_bcolor_orange');
+     }else{
+        $("#to_secondstep_button").prop("disabled","disabled");
+        $("#to_secondstep_button").removeClass('block_bcolor_orange').addClass('block_bcolor_black');
+    }
+    });
+
+// 是否设置测试时长
+$("#choose_time").change(function() {
+    var selectValue = $("#choose_time").val();
+    if(selectValue==1){
+        $("#testlasttime").show();
+        $("#testlasttime").next().show();
+    }else{
+        $("#testlasttime").hide();
+        $("#testlasttime").next().hide();
+    }
+});
+
+// 是否设置测试截止时间
+$("#choose_deadtime").change(function() {
+    var selectValue = $("#choose_deadtime").val();
+    if(selectValue==1){
+        $("#datetimepicker").show();
+    }else{
+        $("#datetimepicker").hide();
+    }
+});
+
+function operate(){
+    // 点击下一步到第二步
+    $("#to_secondstep_button").click(function(){
+        $("#make_name").hide();
+        $("#secondstep").show();
+        $("#strp_img_first").attr({disabled:false}).find("i").removeClass('block_bcolor_black').addClass('cur_orange');
+        $("#strp_img_second").find("i").removeClass('block_bcolor_black').addClass('cur_orange');
+        var name=$("#nameform :text").val();
+        $("#test_name").empty().text(name);
+
+    });
+    //点击图标返回第一步
+    $("#strp_img_first").click(function(){
+        $("#make_name").show();
+        $("#secondstep").hide();
+        $("#strp_img_first").attr({disabled:true});
+    });
+    // 点击下一步到第3步
+    $("#to_thirdstep_button").click(function(){
+        $("#secondstep").hide();
+        $("#thirdstep1").show();$("#thirdstep2").show();$("#thirdstep").show();
+        $("#strp_img_first").attr({disabled:'disabled'});
+        $("#strp_img_second").attr({disabled:false});
+        $("#strp_img_third").find("i").removeClass('block_bcolor_black').addClass('cur_orange');
+        $("#to_fourthstep_button").show();
+    });
+    //点击图标返回第2步
+    $("#strp_img_second").click(function(){
+        $("#secondstep").show();
+        $("#thirdstep1").hide();$("#thirdstep2").hide();$("#thirdstep").hide();
+        $("#strp_img_first").attr({disabled:false});
+        $("#strp_img_second").attr({disabled:'disabled'});
+        $("#to_fourthstep_button").hide();
+    });
+
+    // 点击下一步到第4步
+    $("#to_fourthstep_button").click(function(){
+        $("#make_name").hide();
+        $("#secondstep").hide();
+        $("#thirdstep1").hide();$("#thirdstep2").hide();$("#thirdstep").hide();
+        $("#publish_settime1").show();$("#publish_settime2").show();$("#publish_settime").show();
+        $("#to_fourthstep_button").hide();
+        $("#strp_img_first").attr({disabled:'disabled'});
+        $("#strp_img_second").attr({disabled:'disabled'});
+        $("#strp_img_fourth").find("i").removeClass('block_bcolor_black').addClass('cur_orange');
+        var data=get_testid_count();
+        var muneid=data.idstr;
+        var questnum=data.countstr;
+        submit_rule_ajax(muneid,questnum); //第四步提交规则 返回rule_id
+        
+    });
+
+    // 组题 一级知识点 点击伸缩
+    $(".firstfloor>div>a").click(function(){
+    $("#myul a").not($(this)).children().removeClass('fa-minus-circle').addClass('fa-plus-circle');
+    var ulNode=$(this).parent().nextAll();
+    $(".firstfloor>div>a").parent().nextAll().not(ulNode).slideUp();
+    $(".secondfloor>div>a").parent().nextAll().not(ulNode).slideUp();
+    ulNode.slideToggle();
+    if ($(this).children().attr("class").indexOf("fa-plus-circle") >= 0) {
+        $(this).children().removeClass('fa-plus-circle').addClass('fa-minus-circle');
+    } else {
+        $(this).children().removeClass('fa-minus-circle').addClass('fa-plus-circle');
+    }
+    });
+    // 组题 二级知识点 点击伸缩
+    $(".secondfloor>div>a").click(function(){
+    $(".secondfloor a").not($(this)).children().removeClass('fa-minus-circle').addClass('fa-plus-circle');
+    var ulNode=$(this).parent().nextAll();
+    $(".secondfloor>div>a").parent().nextAll().not(ulNode).slideUp();
+    ulNode.slideToggle();
+    if ($(this).children().attr("class").indexOf("fa-plus-circle") >= 0) {
+        $(this).children().removeClass('fa-plus-circle').addClass('fa-minus-circle');
+    } else {
+        $(this).children().removeClass('fa-minus-circle').addClass('fa-plus-circle');
+    }
+    });
+
+
+// 输入框加减
+$(".subone").click(function(){
+    var t = $(this).parent().find("input[type=text]");
+    var num=parseInt($(this).parent().find("input[type=text]").attr("nums"));
+    var sum=parseInt(t.val());
+    var p_id=$(this).parent().find("input[type=text]").attr("parent-id");
+    var obj_second=$(".secondnumcount_"+p_id);
+    var s_p_id=obj_second.attr("parent-id");
+    var obj_first=$(".firstnumcount_"+s_p_id);
+    if(sum>0){
+        t.val(parseInt(t.val())-1);
+        obj_second.text(parseInt(obj_second.text())-1);
+        obj_first.text(parseInt(obj_first.text())-1);
+        get_test_sum();
+    }
+});
+$(".addone").click(function(){
+    var t = $(this).parent().find("input[type=text]");
+    var num=parseInt($(this).parent().find("input[type=text]").attr("nums"));
+    var sum=parseInt(t.val());
+    var p_id=$(this).parent().find("input[type=text]").attr("parent-id");
+    var obj_second=$(".secondnumcount_"+p_id);
+    var s_p_id=obj_second.attr("parent-id");
+    var obj_first=$(".firstnumcount_"+s_p_id);
+    if(sum<num){
+         t.val(parseInt(t.val())+1);
+         obj_second.text(parseInt(obj_second.text())+1);
+         obj_first.text(parseInt(obj_first.text())+1);
+         get_test_sum();
+        }
+});
+
+
+//
+    $(".choose_box").click(function(){
+        if ($(this).hasClass("choose_ischeck")) {
+               //二级知识点选题数量-5
+               var p_id=$(this).next().next().attr("parent-id");
+                var obj_second=$(".secondnumcount_"+p_id);
+                var now_num=parseInt($(this).next().next().val());
+                obj_second.text(parseInt(obj_second.text())-now_num);
+                //一级知识点选题数量+5
+                var s_p_id=obj_second.attr("parent-id");
+                var obj_first=$(".firstnumcount_"+s_p_id);
+                obj_first.text(parseInt(obj_first.text())-now_num);
+
+                $(this).next().next().val(5);
+               $(this).removeClass("choose_ischeck");
+               $(this).nextAll().hide();
+               get_test_sum();
+               isClick();
+
+        } else{
+            $(this).addClass("choose_ischeck");
+            $(this).nextAll().show();
+            var num=parseInt($(this).next().next().attr("nums"));
+            if (num>=5) {
+                $(this).next().next().val(5);
+            } else{
+                $(this).next().next().val(num);
+            }
+            //二级知识点选题数量-5
+            var p_id=$(this).next().next().attr("parent-id");
+            var obj_second=$(".secondnumcount_"+p_id);
+            var now_num=parseInt($(this).next().next().val());
+            obj_second.text(parseInt(obj_second.text())+now_num);
+
+             //一级知识点选题数量+5
+            var s_p_id=obj_second.attr("parent-id");
+            var obj_first=$(".firstnumcount_"+s_p_id);
+            obj_first.text(parseInt(obj_first.text())+now_num);
+
+            get_test_sum();
+            isClick();
+        };
+    });
+}
+operate();
+
+// 查看详情
+function show_hide_detial(){
+    $(".showdetail").click(function() {
+        $(this).parent().nextAll().toggle(400);
+    });
+}
+//点击换一题
+function change_question(){
+    $(".btn_change_test").bind("click",function() {
+                $(this).attr('ischange',1);
+                var key=$(".btn_change_test");
+                var key_str='';
+                key.each(function(){
+                        key_str+=$(this).attr('ischange');
+                        key_str+=',';
+                });
+                key_str=key_str.substring(0,key_str.length-1);
+                id_str=$("#question_id_str").text();
+                menu_str=$("#menu_id_str").text();
+                console.log('old:'+key_str,menu_str,id_str);//输出 换题串 menuid串 questionid串
+                ajax_change_question(key_str,menu_str,id_str);
+        });
+}
+
+
+//换题ajax 返回新的题目id munid ischangeid
+function ajax_change_question(change_str, menu_str, question_str){
+    $.ajax({
+        url: '/test/changeQuestion',
+        type: 'POST',
+        dataType: 'json',
+        data: {is_change_str:change_str,menu_id_str:menu_str,question_id_str:question_str},
+        success:function(json){
+            var data=json.Data;
+            var str_qid=analysis_json(json.Data,'question_id');
+            var str_mid=analysis_json(json.Data,'menu_id');
+            var str_ckey=analysis_json(json.Data,'is_change');
+            $("#menu_id_str").empty().text(str_mid);
+            $("#question_id_str").empty().text(str_qid);
+            console.log('new:'+str_ckey,str_mid,str_qid);//输出换题后 questionid串  用这个来取题
+            for(var i in data){
+                if(data[i].is_change==1){
+                    console.log(data[i].question_id);
+                    var change_id={question_id_str:data[i].question_id};
+                    do_change_ajax('/pubblico/getQuestion', 'POST', 'json', change_id);
+                }
+            }
+            
+        }
+    });
+    
+}
+
+// 循环解析json 并返回相应的字符串拼接串
+function analysis_json(obj,key){
+    var str='';
+    for(var i in obj){
+        var data=obj[i];
+        str+=data[key];
+        str+=',';
+    }
+    str=str.substring(0,str.length-1);
+    return str;
+}
+
+//ajax函数  获取新题 并展示
+function do_change_ajax(URL, TYPE, DATATYPE,DATA){
+    $.ajax({
+        url:URL ,
+        type: TYPE,
+        dataType: DATATYPE,
+        data: DATA,
+        success:function(json){
+            var data=json.Data;
+            var btn=$(".btn_change_test");
+            var str='';
+            var label_str='';
+            for(var k in data[0].label){
+                label_str+="<div class='capsule' style='margin:15px 10px 15px 0;color:#FFFFFF'>"+data[0].label[k]+"</div>";
+            }
+            btn.each(function(index, el) {
+                if($(this).attr('ischange')==1){
+                    if (data[0].question_materia_detail) {
+                    str+="<p>"+data[0].question_materia_detail+"</p><p>"+data[0].question_detail+"</p><p><span>A.</span><span>"+data[0].choose[0]['detail']+"</span></p><p><span>B.</span><span>"+data[0].choose[1]['detail']+"</span></p><p><span>C.</span><span>"+data[0].choose[2]['detail']+"</span></p><p><span>D.</span><span>"+data[0].choose[3]['detail']+"</span></p><p class='checkdetail'><span class='showdetail'>查看解析与更换题目</span></p><div class='details'><p><span>解析：</span><span>"+data[0].question_analysis+"</span></p>"+label_str+"<input ischange='0' type='button' class='btn_change_test' value='换一题'></div>";
+                    } else{
+                        str+="<p>"+data[0].question_detail+"</p><p><span>A.</span><span>"+data[0].choose[0]['detail']+"</span></p><p><span>B.</span><span>"+data[0].choose[1]['detail']+"</span></p><p><span>C.</span><span>"+data[0].choose[2]['detail']+"</span></p><p><span>D.</span><span>"+data[0].choose[3]['detail']+"</span></p><p class='checkdetail'><span class='showdetail'>查看解析与更换题目</span></p><div class='details'><p><span>解析：</span><span>"+data[0].question_analysis+"</span></p>"+label_str+"<input ischange='0' type='button' class='btn_change_test' value='换一题'></div>";
+                    }
+                    var temp=$(this).parent().parent().prev();
+                    $(this).parent().parent().slideUp(600).empty().append(str).slideDown(600);
+                    temp.next().find(".showdetail").bind("click",function() {$(this).parent().nextAll().toggle(400);}); //新插入的元素添加点击事件 显示详情
+                    temp.next().find(".btn_change_test").bind('click',function(){
+                            $(this).attr('ischange',1);
+                            var key=$(".btn_change_test");
+                            var key_str='';
+                            key.each(function(){
+                                    key_str+=$(this).attr('ischange');
+                                    key_str+=',';
+                            });
+                            key_str=key_str.substring(0,key_str.length-1);
+                            id_str=$("#question_id_str").text();
+                            menu_str=$("#menu_id_str").text();
+                            console.log('old:'+key_str,menu_str,id_str);//输出 换题串 menuid串 questionid串
+                            ajax_change_question(key_str,menu_str,id_str);
+                        
+                    });//新插入的元素添加点击事件 换一题
+                }
+            });
+        }
+    });
+} 
+
+
+// 获取选题总数
+function get_test_sum(){
+    var s=$(".sumofcount");
+    var count=0;
+    s.each(function(index, el) {
+        count+=parseInt($(this).text());
+    });
+     $("#test_count_sum").text(count);
+}
+// 判断是否选题 是则下一步按钮可点击
+function isClick(){
+    var len=parseInt($("#test_count_sum").text());
+    if (len==0) {
+        $("#to_thirdstep_button").prop("disabled","disabled");
+        $("#to_thirdstep_button").removeClass('block_bcolor_orange').addClass('block_bcolor_black');
+    } else{
+        $("#to_thirdstep_button").removeAttr("disabled");
+        $("#to_thirdstep_button").removeClass('block_bcolor_black').addClass('block_bcolor_orange');
+    }
+} 
+
+
+//拼接选题数量 和题目id 选题规则
+function get_testid_count(){
+    var allchoose=$(".choose_ischeck");
+    var  id_str='';
+    var count_str='';
+    $.each(allchoose,function(){
+        id_str+=$(this).attr("third-id");
+        id_str+=',';
+        count_str+=$(this).next().next().val();
+        count_str+=',';
+    });
+        id_str=id_str.substring(0,id_str.length-1);
+        count_str=count_str.substring(0,count_str.length-1);
+        var info={"idstr":id_str,"countstr":count_str};
+        return info;
+        //console.log(id_str);
+        //console.log(count_str);
+}
+$("#to_thirdstep_button").click(function() {
+    var info=get_testid_count(); //拼接 题目id 和 数量
+    $("#question_num_str").empty().text(info.countstr);
+    submit_rule(info.idstr,info.countstr); //post获取题目信息
+
+});
+
+
+
+//获取所有知识点 并生成选题列表
+$.ajax({
+             type: "POST",
+             url: "/pubblico/getMenuList",
+             dataType: "json",
+             success: function(json){
+                var menu = json.Data.menu_positive;//获取知识点对象
+                var str = '';
+                for(var i in menu)
+                {
+                    var secondmenu=menu[i].sons;
+                    str += "<li class='firstfloor' first-id='"+i+"''><div><a href='#''><i class='fa fa-plus-circle' ></i>"+menu[i].name+"</a><div class='set_count_div'><span class='firsttextcount'>已选题量：</span><span class='sumofcount firstnumcount_"+i+"'>0</span></div></div><ul>";
+                    for(var j in secondmenu)
+                    {
+                        var thirdmenu=secondmenu[j].sons;
+                        str += "<li class='secondfloor' second-id='"+j+"''><div><a href='#'><i class='fa fa-plus-circle' ></i>"+secondmenu[j].name+"</a><div class='set_count_div'><span class='secondtextcount'>已选题量：</span><span class='secondnumcount_"+j+"' parent-id='"+i+"'>0</span></div></div><ul style='background: #FFFFFF;'>";
+                        for(var k in thirdmenu)
+                        {
+                            str +="<li><span class='thirdfloortitle'><i class='fa fa-circle' ></i>"+thirdmenu[k].name+"    ( "+thirdmenu[k].question_num+"题 )</span><div class='set_count_div'><span class='choose_box' third-id='"+k+"' ></span><span hidden>题量：</span><input hidden nums='"+thirdmenu[k].question_num+"'  class='text_box'  type='text' value='5' readonly='readonly' parent-id='"+j+"' /><input hidden class='subone' name='' type='button' value='-' /><input hidden class='addone' name='' type='button' value='+' /></div></li>"
+                        }
+                        str +="</ul>";
+                    }
+                    str +="</ul>";
+                }
+                str +="</li>";
+            $("#myul").append(str);
+            $("#myul i.fa").css({display: 'inline','margin-right':'10px'});
+            operate();
+            }
+
+});
+
+// 用全局变量存储选题规则知识点id串menu_id_str
+// 和题目id串question_id_str
+
+// 提交选题规则 获取题目id
+function submit_rule(idstr, countstr){
+    $.ajax({
+        url: '/test/chooseQuestion',
+        type: 'POST',
+        dataType: 'json',
+        data: {menu_id_str:idstr,question_num_str:countstr},
+        success:function(json){
+            var data=json.Data;
+            var id_str='';
+            var menu_id='';
+            for(var i in data)
+            {
+                id_str+=data[i].question_id;
+                id_str+=',';
+                menu_id+=data[i].menu_id;
+                menu_id+=',';
+            }
+                id_str=id_str.substring(0,id_str.length-1);
+                menu_id=menu_id.substring(0,menu_id.length-1);
+                $("#menu_id_str").empty().text(menu_id);
+                $("#question_id_str").empty().text(id_str);
+                get_test_info(id_str); //提交题目id 获取题目信息
+        }
+    });
+}
+
+//根据题目id获取题目 并展示
+function get_test_info(q_id_str){
+    $.ajax({
+        url: '/pubblico/getQuestion',
+        type: 'POST',
+        dataType: 'json',
+        data: {question_id_str:q_id_str},
+        success:function(json){
+            //console.log(json);
+            var data=json.Data;
+            var str='';
+            for(var i in data)
+            {
+                var temp=0;
+                temp=i;
+                temp++;
+                var label_str='';
+                for(var k in data[i].label){
+                    label_str+="<div class='capsule' style='margin:15px 10px 15px 0;color:#FFFFFF'>"+data[i].label[k]+"</div>";
+                }
+                //判断是否为材料题
+                if (data[i].question_materia_detail) {
+                str+="<div class='data_object'><p class='title_num'><span>"+temp+"</span></p><div class='content'><p>"+data[i].question_materia_detail+"</p><p>"+data[i].question_detail+"</p><p><span>A.</span><span>"+data[i].choose[0]['detail']+"</span></p><p><span>B.</span><span>"+data[i].choose[1]['detail']+"</span></p><p><span>C.</span><span>"+data[i].choose[2]['detail']+"</span></p><p><span>D.</span><span>"+data[i].choose[3]['detail']+"</span></p><p class='checkdetail'><span class='showdetail'>查看解析与更换题目</span></p><div class='details'><p><span>解析：</span><span>"+data[i].question_analysis+"</span></p>"+label_str+"<input ischange='0' type='button' class='btn_change_test' value='换一题'></div></div></div>";
+                } else{
+                    str+="<div class='data_object'><p class='title_num'><span>"+temp+"</span></p><div class='content'><p>"+data[i].question_detail+"</p><p><span>A.</span><span>"+data[i].choose[0]['detail']+"</span></p><p><span>B.</span><span>"+data[i].choose[1]['detail']+"</span></p><p><span>C.</span><span>"+data[i].choose[2]['detail']+"</span></p><p><span>D.</span><span>"+data[i].choose[3]['detail']+"</span></p><p class='checkdetail'><span class='showdetail'>查看解析与更换题目</span></p><div class='details'><p><span>解析：</span><span>"+data[i].question_analysis+"</span></p>"+label_str+"<input ischange='0' type='button' class='btn_change_test' value='换一题'></div></div></div>";
+                }
+            }
+            //console.log(data);
+            $("#thirdstep").empty();
+            $("#thirdstep").append(str);
+            show_hide_detial();
+            change_question();
+        }
+    });
+}
+
+
+//第四步提交规则 返回rule_id
+function submit_rule_ajax(menu_id, question_num){
+    $.ajax({
+        url:'/test_rule/postRule',
+        type: 'POST',
+        async:false,
+        dataType: 'json',
+        data: {menu_id_str:menu_id,question_num_str:question_num},
+        success:function(json){
+            var ruleid=json.Data. rule_id;
+            $("#rule_id").empty().text(ruleid);
+        }
+    });
+}
+
+
+//第四步提交测试 返回test_id
+function submit_test_ajax(groupid,questionidstr,ruleid,statusid,testname,testtype){
+    $.ajax({
+        url:'/test/postTest',
+        type: 'POST',
+        async:false,
+        dataType: 'json',
+        data: {group_id:groupid,question_id_str:questionidstr,rule_id:ruleid,status:statusid,test_name:testname,test_type:testtype},
+        success:function(json){
+            var testid=json.Data.test_id;
+            $("#test_id").empty().text(testid);
+        }
+    });
+}
+
+//
+////第四步设置发布时间
+function set_publish_ajax(endtime,starttime,testid,duration){
+    $.ajax({
+        url:'/test/setTestTime',
+        type: 'POST',
+        async:false,
+        dataType: 'json',
+        data: {test_end_time:endtime,test_id:testid,test_start_time:starttime,test_time:duration},
+        success:function(json){
+            console.log(json.Data.flag);
+        }
+    });
+}
+
+// 日期选择js
+var logic = function( currentDateTime ){
+    if( currentDateTime.getDay()==6 ){
+        this.setOptions({
+            minTime:'11:00'
+        });
+    }else
+        this.setOptions({
+            minTime:'8:00'
+        });
+};
+$('#datetimepicker').datetimepicker({
+    onChangeDateTime:logic,
+    onShow:logic,
+    lang:"ch",           //语言选择中文
+});
+
+// 设为草稿点击事件
+$("#save_draft").click(function(event) {
+    var ruleid=$("#rule_id").text();
+    var groupid=$("#group_id").text();
+    var questionidstr=$("#question_id_str").text();
+    var statusid=2;
+    var testname=$("#test_name").text();
+    var testtype=1;
+    var  end=DateToUnix($("#datetimepicker").val());
+    var selectValue = $("#choose_time").val();
+    var  dura;
+    if (selectValue==0) {
+        dura=0;
+    } else{
+        dura=parseInt($("#testlasttime").val());
+    }
+    
+    if(confirm("确定要保存为草稿吗？"))
+    {
+        submit_test_ajax(groupid,questionidstr,ruleid,statusid,testname,testtype); //第四步提交测试 返回test_id
+        var testid=$("#test_id").text();
+        set_publish_ajax(end,0,testid,dura);
+        location.href ="check_exam.html";
+    }
+    
+});
+// 立即发布点击事件
+$("#publish_now").click(function(event) {
+    var ruleid=$("#rule_id").text();
+    var groupid=$("#group_id").text();
+    var questionidstr=$("#question_id_str").text();
+    var statusid=1;
+    var testname=$("#test_name").text();
+    var testtype=1;
+    var selectdeadtime = $("#choose_deadtime").val();
+    var  end;
+    if (selectdeadtime==0) {
+        end=0;
+    } else{
+        end=DateToUnix($("#datetimepicker").val());
+    }
+    
+    var selectValue = $("#choose_time").val();
+    var  dura;
+    if (selectValue==0) {
+        dura=0;
+    } else{
+        dura=parseInt($("#testlasttime").val());
+    }
+
+    if(confirm("确定要立即发布测试吗？"))
+    {
+            submit_test_ajax(groupid,questionidstr,ruleid,statusid,testname,testtype); //第四步提交测试 返回test_id
+            var testid=$("#test_id").text();
+            set_publish_ajax(end,0,testid,dura);
+            location.href ="check_exam.html";
+        
+        
+    }
+    
+});
+
+</script>
+
+</html>

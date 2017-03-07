@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <script type="text/javascript" src="plugin/circliful/jquery.circliful.min.js"></script>
+    <title>首页</title>
+</head>
+
+<body>
+<div id="header"></div>
+<div id="left-navigation"></div>
+<div id="mainbody">
+    <div class="mainbody_title_box">欢迎来到职业素养训练后台管理系统</div>
+    <!--<div class="mainbody_top">-->
+    <!--<span>当前考核对象：</span><span>一班</span>-->
+    <!--</div>-->
+    <div class="mainbody_bottom" >
+        <div id="tab-container2" class='tab-container'>
+            <ul class='etabs'>
+                <li class='tab active'><a href="#score-tabs1-html">成绩综合总览</a></li>
+            </ul>
+            <div class='panel-container' style="padding-left: 27px;">
+                <div id="first_page_div1">
+
+
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-container3" class='tab-container'>
+            <ul class='etabs'>
+                <li class='tab active'><a href="#testad-tabs1-html">测试管理</a></li>
+            </ul>
+            <div class='panel-container'>
+                <div id="first_page_div2">
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-container4" class='tab-container'>
+            <ul class='etabs'>
+                <li class='tab active'><a href="#classad-tabs1-html">班级管理</a></li>
+            </ul>
+            <div class='panel-container'>
+                <div id="first_page_div3">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-container5" class='tab-container'>
+        <ul class='etabs'>
+            <li class='tab active'><a href="#tabs1-html">个人绩效</a></li>
+        </ul>
+        <div class='panel-container'>
+            <div id="first_page_div4">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="foot"></div>
+
+</body>
+<script type="text/javascript">
+    $("#header").load("header.html");
+    $("#left-navigation").load("left.html", function() {
+        $("ul.accordion>li:eq(0)").addClass('open');
+    });
+    $("#foot").load("footer.html");
+
+    $("#first_page_div1").load("first_page_div1.html");
+    $("#first_page_div2").load("first_page_div2.html");
+    $("#first_page_div3").load("first_page_div3.html");
+    $("#first_page_div4").load("first_page_div4.html");
+
+
+//    function getCookie(name)
+//    {
+//        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+//        if(arr=document.cookie.match(reg))
+//            return unescape(arr[2]);
+//        else
+//            return null;
+//    }
+</script>
+</html>

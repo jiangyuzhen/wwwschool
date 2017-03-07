@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+    <script type="text/javascript" src="js/jquery.circliful.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>测试管理>查看测试</title>
+</head>
+
+<body>
+<div id="header"></div>
+<div id="left-navigation"></div>
+<div id="mainbody">
+    <div class="mainbody_title_box">测试管理>查看测试</div>
+    <div class='tab-container'>
+        <div class='panel-container'>
+            <div id="realcontent">
+            </div>
+        </div>
+    </div>
+    <div class="mainbody_white_box " style="text-align:center"></div>
+</div>
+<div id="foot"></div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $("#header").load("header.html");
+        $("#left-navigation").load("left.html", function () {
+            $("ul.accordion>li:eq(2)").addClass('open').children().show().find('li:eq(0)').children().addClass('bcolor');
+        });
+        $("#foot").load("footer.html");
+        get_test_list(1);
+
+    });
+
+    function get_test_list(pages) {
+        $.ajax({
+            url: '/test_detail/getTestList',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                page: pages
+            },
+            success: function (json) {
+                // console.log(json);
+                var data = json.Data.test;
+                var page = json.Data.page;
+                var total_page = json.Data.total_page;
+                var str = '';
+                for (var i in data) {
+                    var unfinish_num = parseInt(data[i].all_students) - parseInt(data[i].student_do);
+                    var finish_per = (parseInt(data[i].student_do) / parseInt(data[i].all_students)) * 100;
+                    var createtime = UnixToDate(data[i].create_time);
+                    var endtime = data[i].test_end_time;
+                    if (endtime == 0 || endtime == null) {
+                        endtime = '未设置';
+                    } else {
+                        endtime = UnixToDate(endtime);
+                    }
+                    // console.log(endtime);
+                    if (data[i].status == 2) {
+                        str += "<a href='click_draft_tosettime.html?testid=" + data[i].test_id + "&test_name=" + encodeURI(data[i].test_name) + "' test-id='" + data[i].test_id + "' test-status='" + data[i].status + "'><div class='realcontent_a_p'><p class='left_p_content'><span class='span_title'>" + data[i].test_name + "</span><span class='span_deadline'>测试截止时间：" + endtime + "</span></p><p class='bottom_p_content'>共" + data[i].test_question_num + "题；还有" + unfinish_num + "位同学未完成练习；发布时间：" + createtime + "</p></div><div class='circliful_float_right' id='myStat" + i + "' data-dimension='90' data-text='草稿' data-width='10' data-fontsize='14' data-percent='100' data-fgcolor='#e76644' data-bgcolor='#eee' data-fill='#ddd'></div></a>";
+                    } else {
+                        str += "<a href='check_exam_condition.html?testid=" + data[i].test_id + "&test_name=" + encodeURI(data[i].test_name) + "' test-id='" + data[i].test_id + "' test-status='" + data[i].status + "'><div class='realcontent_a_p'><p class='left_p_content'><span class='span_title'>" + data[i].test_name + "</span><span class='span_deadline'>测试截止时间：" + endtime + "</span></p><p class='bottom_p_content'>共" + data[i].test_question_num + "题；还有" + unfinish_num + "位同学未完成练习；发布时间：" + createtime + "</p></div><div class='circliful_float_right' id='myStat" + i + "' data-dimension='90' data-text='" + parseInt(finish_per) + "%' data-info='' data-width='10' data-fontsize='14' data-percent='" + finish_per + "' data-fgcolor='#28b77a' data-bgcolor='#eee' data-fill='#ddd'></div></a>";
+                    }
+                }
+                $("#realcontent").empty().append(str);
+                circleAddCss();
+                show_page(page);
+            }
+        });
+    }
+    // 页码分页
+    function show_page(which_page) {
+        $.ajax({
+            url: '/test_detail/getTestList',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                page: which_page
+            },
+            success: function (json) {
+                var page = json.Data.page;
+                var total_page = json.Data.total_page;
+                var str = '';
+                str += "<a href='#' class='pages' page-id='1'>首页</a>";
+                for (var i = 1; i <= total_page; i++) {
+                    if (i == page) {
+                        str += "<a href='#' class='pages pagescur' page-id='" + i + "'>" + i + "</a>";
+                    } else {
+                        str += "<a href='#' class='pages' page-id='" + i + "'>" + i + "</a>";
+                    }
+                    ;
+
+                }
+                str += "<a href='#' class='pages' page-id='" + total_page + "'>尾页</a>";
+                $(".mainbody_white_box").empty().append(str);
+                page_click();
+            }
+        });
+    }
+
+
+    //添加分页按钮点击事件
+    function page_click() {
+        $(".pages").click(function () {
+            var w_page = $(this).attr("page-id");
+            get_test_list(w_page);
+            show_page(w_page);
+        });
+    }
+
+    // 百分比圆环 添加样式
+    function circleAddCss() {
+        $(".circliful_float_right").each(function (index, el) {
+            $("#myStat" + index + "").circliful();
+        });
+    }
+
+</script>
+
+</html>

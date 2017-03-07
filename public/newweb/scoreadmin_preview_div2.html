@@ -1,0 +1,143 @@
+                    <!-- div2中的内容 -->
+                    <span class="set_system3"></span>
+                    <sapn>
+                        <select class="cap_select check-cycle-two" id="">
+                            <option value="0">选择您要考核的周期</option>
+                        </select>
+                    </sapn>
+                    <button class='search-point-degree cap_orange_btn'>确定</button>
+                    <div id="tab-master">
+                        <table class="gridtable" style="border-radius: 5px;">
+                            
+                        </table>
+                    </div>
+                    <!-- div2中的内容 -->
+<script type="text/javascript">
+$(function(){
+    setSystem('.set_system3',3);
+    getUserSearchDateTwo();
+    searchPointDegree();
+    getPointDegree();
+});
+/**
+ * [getUserSearchDate 获取考核的日期]
+ * @param  {[type]} aData [description]
+ * @return {[type]}       [description]
+ */
+function getUserSearchDateTwo(aData){
+    //获取考核周期
+    ajaxPost('/pubblico/getUserSearchDate',aData,function(data){
+        var strText = '';
+        for(var i in data){
+            strText += "<option value='"+data[i].value+"'>"+data[i].title+"</option>";
+        }
+        $(".check-cycle-two").append(strText);
+    });
+}
+/**
+ * [searchPointTrend 查找规定范围的数据]
+ * @return {[type]} [description]
+ */
+function searchPointDegree() {
+    $('.search-point-degree').click(function(){
+        //获取层级
+        var system='';
+        if($('#category_111').val()){
+            system+=',';
+            for (var i = 1; i <= $('.system_3').length; i++) {
+                if($('#category_11'+i).val()){
+                    system+=$('#category_11'+i).val()+',';
+                }
+            };
+        }
+        //获取日期
+        var cycleDays = $(".check-cycle-two").val();
+        //获取知识点
+        aData = {level:system,cycle_days:cycleDays}
+        console.log(aData);
+        getPointDegree(aData);
+    });
+}
+/**
+ * [getPointDegree 获取所有知识点的数据]
+ * @param  {[type]} aData [description]
+ * @return {[type]}       [description]
+ */
+function getPointDegree(aData) {
+    ajaxPost('/performance_manage/getPointDegree',aData,function(data){
+        //初始化数组
+        var arrPoint = new Array();
+        //二位数组初始化
+        for(var i in data){
+            arrPoint[data[i]['menu_father_id']] = new Array();
+        }
+        //把子数据压入数组
+        for(var i in data){
+            arrPoint[data[i]['menu_father_id']].push(data[i]);
+        }
+        var strCircle = '<tr><th>考点</th><th>答对题数</th><th>题目总数</th><th>正确率</th><th>练习时长</th></tr>';
+        for(var i in arrPoint[0]){
+            if(arrPoint[0][i]['menu_data']['total_num'] != 0){
+                accuracyF = (arrPoint[0][i]['menu_data']['right_num']/arrPoint[0][i]['menu_data']['total_num']).toFixed(2);
+            }else{
+                accuracyF = 0;
+            }
+            strCircle +="<tr class='first'><td style='text-align:left; padding-left:14%;''><i class='fa fa-plus-circle list_c' point-id='" + arrPoint[0][i]['menu_id'] + "'></i><span class='m_left'>"+arrPoint[0][i]['menu_name']+"</span></td><td>"+arrPoint[0][i]['menu_data']['right_num']+"</td><td>"+arrPoint[0][i]['menu_data']['total_num']+"</td><td><span>"+accuracyF+"</span>%</td><td><span>"+(arrPoint[0][i]['menu_data']['right_num']/60).toFixed(2)+"</span>分</td></tr>";
+            var keyF = arrPoint[0][i]['menu_id'];
+            for(var j in arrPoint[keyF]){
+                if(arrPoint[keyF][j]['menu_data']['total_num'] != 0){
+                    accuracyS = (arrPoint[keyF][j]['menu_data']['right_num']/arrPoint[keyF][j]['menu_data']['total_num']).toFixed(2);
+                }else{
+                    accuracyS = 0;
+                }
+                strCircle +="<tr class='second bg_white point_" + arrPoint[0][i]['menu_id']  + "' hidden><td style='text-align:left; padding-left:15%;''><i class='fa list_c1 fa-plus-circle' point-id='" + arrPoint[keyF][j]['menu_id'] + "'></i><span class='m_left'>"+arrPoint[keyF][j]['menu_name']+"</span></td><td>"+arrPoint[keyF][j]['menu_data']['right_num']+"</td><td>"+arrPoint[keyF][j]['menu_data']['total_num']+"</td><td><span>"+accuracyS+"</span>%</td><td><span>"+(arrPoint[keyF][j]['menu_data']['right_num']/60).toFixed(2)+"</span>分</td></tr>";
+                var keyS = arrPoint[keyF][j]['menu_id'];
+                for(var k in arrPoint[keyS]){
+                    if(arrPoint[keyS][k]['menu_data']['total_num'] != 0){
+                        accuracyT = (arrPoint[keyS][k]['menu_data']['right_num']/arrPoint[keyS][k]['menu_data']['total_num']).toFixed(2);
+                    }else{
+                        accuracyT = 0;
+                    }
+                    strCircle +="<tr class='bg_white point_" + arrPoint[keyF][j]['menu_id'] + "' hidden><td style='text-align:left; padding-left:17%;''><i style='font-size: 12px;' class='fa fa-circle' point-id='" + k + "'></i><span class='m_left'>"+arrPoint[keyS][k]['menu_name']+"</span></td><td>"+arrPoint[keyS][k]['menu_data']['right_num']+"</td><td>"+arrPoint[keyS][k]['menu_data']['total_num']+"</td><td><span>"+accuracyT+"</span>%</td><td><span>"+(arrPoint[keyS][k]['menu_data']['right_num']/60).toFixed(2)+"</span>分</td></tr>";
+                }
+            }
+            "<td>20</td><td>40</td><td><span>50</span>%</td><td><span>40</span>分</td></tr>";
+            strCircle += "</tr>";
+        }
+        $('.gridtable').empty().append(strCircle);
+        group_list_js();
+    });
+}
+
+function group_list_js() {
+    $("tr").hover(function() {
+        $(this).addClass('bg_gray');
+    }, function() {
+        $(this).removeClass('bg_gray');
+    });
+    $(".list_c").click(function() {
+        var p = $(this).attr("point-id");
+        //点击图片+-变化
+        if ($(this).attr("class").indexOf("fa-plus-circle") >= 0) {
+            $(this).removeClass('fa-plus-circle').addClass('fa-minus-circle');
+            $(".point_"+ p).show();
+        } else {
+            $(this).removeClass('fa-minus-circle').addClass('fa-plus-circle');
+            $(this).parent().parent().nextUntil("tr.first").hide();
+            $("tr.second").find("i").removeClass('fa-minus-circle').addClass('fa-plus-circle');
+        }
+    });
+    $(".list_c1").click(function() {
+        var p = $(this).attr("point-id");
+        if ($(this).attr("class").indexOf("fa-plus-circle") >= 0) {
+            $(this).removeClass('fa-plus-circle').addClass('fa-minus-circle');
+            $(".point_"+ p).show();
+        } else {
+            $(this).removeClass('fa-minus-circle').addClass('fa-plus-circle');
+            $(".point_"+ p).hide();
+        }
+    });
+}
+
+
+</script>

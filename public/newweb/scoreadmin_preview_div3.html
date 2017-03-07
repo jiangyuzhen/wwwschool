@@ -1,0 +1,231 @@
+                    <!-- div3中的内容 -->
+
+                    
+                    <div style="margin-top: -46px;">
+                    <span class="font_color_black font_size_14" style="margin-right:6px;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp层级：</span><span class="set_system"></span><br/>
+                    <span class="font_color_black font_size_14" style="margin-right:6px;">&nbsp&nbsp&nbsp知识点：</span><span class='point' style="display:inline-block; margin: 10px 0;">
+                        <span class='first-point'>
+                        </span>
+                        <span class='second-point'>
+                        </span>
+                        <span class='third-point'>
+                        </span>
+                    </span><br/>
+                    <span class="font_color_black font_size_14">考核周期：</span><span>
+                        <select class="cap_select check-cycle-three" id="">
+                            <option value="0">选择您要考核的周期</option>
+                        </select>
+                    </span><button class='search-point-trend-data-button cap_orange_btn'>确定</button><br/>
+                    <sapn style="display:inline-block; margin: 34px 0 8px 0;">
+                            <button class="point-total-num-button cap_gray_btn">答题量</button>
+                            <button class="point-accuracy-button cap_gray_btn">正确率</button>
+                            <button class="point-practice-time-button cap_gray_btn">练习时长</button>
+                            <button class="point-practice-speed-button cap_gray_btn">答题速度</button>
+                    </sapn>
+                    <!--<span id="select">-->
+                        <!--<select name="category_1" id="category_1" class="cap_select system" onChange="change('category_1');">-->
+                            <!--<option value="">请选择</option>-->
+                        <!--</select>-->
+                    <!--</span>-->
+                    
+                    </div>
+                    <div id="maps-two" style="height:400px; border:1px solid #ccc;padding:1px;"></div>
+                    
+                    <!-- div3中的内容 -->
+<script type="text/javascript">
+    var pointSeriesTotalNum = new Array();
+    var pointSeriesAccuracy = new Array();
+    var pointSeriesPracticeTime = new Array();
+    var pointSeriesPracticeSpeed = new Array();
+    var arrDate = new Array();
+    //初始化搜索知识点数组
+    var arrPoint = new Array();
+$(function(){
+    setSystem('.set_system',1);
+    getUserSearchDateTwo();
+    getPointTrend();
+    getAllPoint();
+    searchPointTrend();
+});
+
+// 灰色椭圆按钮添加点击事件
+$(".cap_gray_btn").click(function(event) {
+    $(".cap_gray_btn").removeClass('cur_orange');
+    $(this).addClass('cur_orange')
+});
+
+/**
+ * [getAllPoint 获取所有知识点]
+ * @return {[type]} [description]
+ */
+function getAllPoint(){
+    ajaxPost('/pubblico/getAllPoint','',function(data){
+        //二位数组初始化
+        for(var i in data){
+            arrPoint[data[i]['menu_father_id']] = new Array();
+        }
+        //把子数据压入数组
+        for(var i in data){
+            arrPoint[data[i]['menu_father_id']].push(data[i]);
+        }
+        var strPoint = "<select class='cap_select first-point'><option value='0'>请选择知识点</option>";
+        for(var i in arrPoint[0]){
+            strPoint += "<option value='"+arrPoint[0][i].menu_id+"'>"+arrPoint[0][i].menu_name+"</option>";
+        }
+        strPoint += '</select>';
+        $('.first-point').append(strPoint);
+        $('.first-point select').change(function(){
+            $('.second-point').empty();
+            $('.third-point').empty();
+            var firstPointId = $(this).val();
+            if(firstPointId != 0){
+                getSecondPoint(firstPointId);
+            }
+        });
+    });
+}
+function getSecondPoint(firstPointId){
+    var strPoint = "<select class='cap_select'><option value='0'>请选择知识点</option>";
+    for(var i in arrPoint[firstPointId]){
+        strPoint += "<option value='"+arrPoint[firstPointId][i].menu_id+"'>"+arrPoint[firstPointId][i].menu_name+"</option>";
+    }
+    strPoint += '</select>';
+    $('.second-point').append(strPoint);
+    $('.second-point select').change(function(){
+        $('.third-point').empty();
+        secondPointId = $(this).val();
+        if(secondPointId != 0){
+            getThirdPoint(secondPointId);
+        }
+    });
+}
+function getThirdPoint(secondPointId){
+    var strPoint = "<select class='cap_select'><option value='0'>请选择知识点</option>";
+    for(var i in arrPoint[secondPointId]){
+        strPoint += "<option value='"+arrPoint[secondPointId][i].menu_id+"'>"+arrPoint[secondPointId][i].menu_name+"</option>";
+    }
+    strPoint += '</select>';
+    $('.third-point').append(strPoint);
+}
+/**
+ * [getUserSearchDate 获取考核的日期]
+ * @param  {[type]} aData [description]
+ * @return {[type]}       [description]
+ */
+function getUserSearchDateTwo(aData){
+    //获取考核周期
+    ajaxPost('/pubblico/getUserSearchDate',aData,function(data){
+        var strText = '';
+        for(var i in data){
+            strText += "<option value='"+data[i].value+"'>"+data[i].title+"</option>";
+        }
+        $(".check-cycle-three").append(strText);
+    });
+}
+/**
+ * [searchPointTrend 查找规定范围的数据]
+ * @return {[type]} [description]
+ */
+function searchPointTrend() {
+    $('.search-point-trend-data-button').click(function(){
+        $(".cap_gray_btn").removeClass('cur_orange');
+        //获取层级
+        var system='';
+        if($('#category_1').val()){
+            system+=',';
+            for (var i = 1; i <= $('.system_1').length; i++) {
+                if($('#category_'+i).val()){
+                    system+=$('#category_'+i).val()+',';
+                }
+            };
+        }
+        //获取日期
+        var cycleDays = $(".check-cycle-three").val();
+        //获取知识点
+        var intFirstPoint = $(".first-point select").val();
+        var intSecondPoint = $(".second-point select").val();
+        var intThirdPoint = $(".third-point select").val();
+        var intPoint = 0;
+        if(intThirdPoint != 0 && intThirdPoint != undefined){
+            intPoint = intThirdPoint;
+        }else if(intSecondPoint != 0 && intSecondPoint != undefined){
+            intPoint = intSecondPoint;
+        }else{
+            intPoint = intFirstPoint;
+        }
+        aData = {level:system,cycle_days:cycleDays,point_id:intPoint}
+        getPointTrend(aData);
+    });
+}
+/**
+ * [getPointTrend 获取知识点趋势图]
+ * @param  {[type]} aData [description]
+ * @return {[type]}       [description]
+ */
+function getPointTrend(aData){
+    ajaxPost('/performance_manage/getPointTrend',aData,function(data){
+        $('#maps-two').empty();
+        var total_num = new Array();
+        var accuracy = new Array();
+        var practice_time = new Array();
+        var practice_speed = new Array();
+        var legendName = new Array();
+        var arrDate = new Array();
+        for(var i = data.length - 1; i >= 0 ;i--){
+            arrDate.push(data[i].date);
+            total_num.push(data[i].total_num);
+            practice_time.push(data[i].practice_time);
+            if(data[i].total_num != 0){
+                accuracy.push(data[i].right_num / data[i].total_num * 100);
+                practice_speed.push(data[i].practice_time / data[i].total_num);
+            }else{
+                accuracy.push(0);
+                practice_speed.push(0);
+            }
+        }
+        /*形成画图数据*/
+        var middleTotalNumObject = new Object();
+        middleTotalNumObject.type = 'line';
+        middleTotalNumObject.data = total_num;
+        pointSeriesTotalNum = [];
+        pointSeriesTotalNum.push(middleTotalNumObject);
+
+        var middleTotalNumObject = new Object();
+        middleTotalNumObject.type = 'line';
+        middleTotalNumObject.data = accuracy;
+        pointSeriesAccuracy = [];
+        pointSeriesAccuracy.push(middleTotalNumObject);
+
+        var middleTotalNumObject = new Object();
+        middleTotalNumObject.type = 'line';
+        middleTotalNumObject.data = practice_time;
+        pointSeriesPracticeTime = [];
+        pointSeriesPracticeTime.push(middleTotalNumObject);
+
+        var middleTotalNumObject = new Object();
+        middleTotalNumObject.type = 'line';
+        middleTotalNumObject.data = practice_speed;
+        pointSeriesPracticeSpeed = [];
+        pointSeriesPracticeSpeed.push(middleTotalNumObject);
+        //计算天数
+        var arrDates = new Array();
+        for (var i = 0; i <arrDate.length; i++) {
+            arrDates.push(arrDate[i]);
+        };
+        /*初始话图片*/
+        DrawEchart('maps-two','','',arrDates,'题',legendName,pointSeriesTotalNum);
+        $('.point-total-num-button').click(function(){
+             DrawEchart('maps-two','','',arrDates,'题',legendName,pointSeriesTotalNum);
+        });
+        $('.point-accuracy-button').click(function(){
+             DrawEchart('maps-two','','',arrDates,'%',legendName,pointSeriesAccuracy);
+        });
+        $('.point-practice-time-button').click(function(){
+             DrawEchart('maps-two','','',arrDates,'秒',legendName,pointSeriesPracticeTime);
+        });
+        $('.point-practice-speed-button').click(function(){
+             DrawEchart('maps-two','','',arrDates,'秒/题',legendName,pointSeriesPracticeSpeed);
+        });
+    });
+}
+</script>

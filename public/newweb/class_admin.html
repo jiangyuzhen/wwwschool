@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>班级管理</title>
+</head>
+
+<body>
+
+<div id="header"></div>
+<div id="left-navigation"></div>
+<div id="mainbody">
+    <div class="mainbody_title_box">班级管理</div>
+    <div class="mainbody_bottom">
+        <div class='tab-container'>
+            <div class='panel-container'>
+                <table class="gridtable class-list" style="border-radius: 5px;">
+                    <tr class="fontsize_14 bg_gray">
+                        <td>我的班级名称</td>
+                        <td>所在层级</td>
+                        <td>已拥有学生</td>
+                        <td>待验证人数</td>
+                        <td>班级代码</td>
+                        <td>班级代码开放状态</td>
+                        <td>操作</td>
+                    </tr>
+                    <!--                             <tr class="fontsize_14">
+                                                    <td>1班</td>
+                                                    <td>2015级1班</td>
+                                                    <td>52</td>
+                                                    <td><span class="font_color_red">46</span></td>
+                                                    <td>652894</td>
+                                                    <td>不开放</td>
+                                                    <td>
+                                                        <a href="class_admin_verify.html" class="operate font_color_yellow">验证管理</a>
+                                                        <a href="#" class="operate font_color_green">开放班级代码</a>
+                                                        <a href="#" class="operate font_color_orange">学生成绩详情</a>
+                                                    </td>
+                                                </tr> -->
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="foot"></div>
+
+</body>
+<script type="text/javascript">
+    $("#header").load("header.html");
+    $("#left-navigation").load("left.html", function () {
+        $("ul.accordion>li:eq(3)").addClass('open');
+    });
+    $("#foot").load("footer.html");
+
+    //表格列的颜色 交替显示
+    function line_color_change() {
+        var obj = $("tr");
+        obj.each(function (index, el) {
+            if (parseInt(index) % 2 != 0) {
+                $(this).addClass('bg_white');
+            }
+        });
+    }
+    // 列表 hover事件
+    function tableHoverEvent() {
+        $("tr").hover(function () {
+            $(this).addClass('bg_gray');
+        }, function () {
+            $(this).removeClass('bg_gray');
+        });
+    }
+
+
+    $(function () {
+        get_class_list(1);
+    });
+
+    function get_class_list(pages) {
+        ajaxPost('/manage_class/getClassList', {page: pages}, function (Data) {
+            var is_edit = Data.is_edit;
+            var data = Data.class;
+            var str = '';
+            for (var i in data) {
+                str += "<tr class='fontsize_14' data-s_y_f_id=" + data[i].s_y_f_id + " ><td>" + data[i].s_y_f_name + "</td><td>" + data[i].parent_name + "</td><td>" + data[i].verified + "</td><td><span class='font_color_red'>" + data[i].unverified + "</span></td><td>" + data[i].verify_code + "</td><td>" + (data[i].verify_status == 1 ? "开放" : "不开放") + "</td><td><a href='class_admin_verify.html?system=" + data[i].s_y_f_id + "' class='is_edit operate font_color_yellow'>验证管理</a> <a href='#' class='is_edit operate " + (data[i].verify_status != 1 ? "font_color_green'>开放" : "font_color_red'>关闭") + "班级代码</a> <a href='student_score_list.html?system=" + data[i].s_y_f_id + "&system_name=" + encodeURI(data[i].parent_name + data[i].s_y_f_name) + "' class='operate font_color_orange'>学生成绩详情</a></td></tr>";
+            }
+            $(".class-list").append(str);
+            line_color_change();
+            tableHoverEvent();
+            if(is_edit!=1){
+                $('.is_edit').remove();
+            }
+        });
+    }
+
+    $(document).on('click', '.font_color_red', function () {
+        var s_y_f_id = $(this).parent().parent().data('s_y_f_id');
+        var mythis = $(this);
+        ajaxPost('/manage_class/modifyClassVerify', {s_y_f_id: s_y_f_id, status: 2}, function (Data) {
+            if (Data.flag == 1) {
+                mythis.removeClass('font_color_red').addClass('font_color_green');
+                mythis.text('开放班级代码');
+                mythis.parent().prev().text('不开放');
+            }
+        });
+
+    });
+
+    $(document).on('click', '.font_color_green', function () {
+        var s_y_f_id = $(this).parent().parent().data('s_y_f_id');
+        var mythis = $(this);
+        ajaxPost('/manage_class/modifyClassVerify', {s_y_f_id: s_y_f_id, status: 1}, function (Data) {
+            if (Data.flag == 1) {
+                mythis.removeClass('font_color_green').addClass('font_color_red');
+                mythis.text('关闭班级代码');
+                mythis.parent().prev().text('开放');
+            }
+        });
+
+    });
+
+</script>
+</html>

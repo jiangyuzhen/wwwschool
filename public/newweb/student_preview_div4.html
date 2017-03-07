@@ -1,0 +1,85 @@
+                    <!-- div4中的内容 -->
+                    <div>
+                        <sapn>
+                            <select class="cap_select check-cycle4" id="">
+                                <option value="0">选择您要考核的周期</option>
+                            </select>
+                        </sapn>
+                        <button class='search-handle-condition-data-button cap_orange_btn'>确定</button>
+                    </div>
+                    <div id="tab-knowledge" style="height: 252px;">
+                        
+                    </div>
+                    <!-- div4中的内容 -->
+<script type="text/javascript">
+$(function(){
+    getUserSearchDateFour();
+    searchPointHandleCondition();
+    getPointHandleCondition({student_id:intStudentId});
+});
+
+function getPointHandleCondition(aData){
+
+    ajaxPost("/student/getPointHandleCondition",aData,function(data){
+        //初始化数组
+        var arrPoint = new Array();
+        //二位数组初始化
+        for(var i in data){
+            arrPoint[data[i]['menu_father_id']] = new Array();
+        }
+        //把子数据压入数组
+        for(var i in data){
+            arrPoint[data[i]['menu_father_id']].push(data[i]);
+        }
+        var strPointHandleCondition = '<div class="hotpoint_example"><span class="small_block_gray"></span>未测试<span class="small_block_red"></span>未达最低要求<span class="small_block_green"></span>通过基础要求</div>';
+        for(var i in arrPoint[0]){
+            strPointHandleCondition +="<div class='hot_table'><div class='hot_table_title'>"+arrPoint[0][i]['menu_name']+"</div><ul id='bubblemenu'>";
+            var keyF = arrPoint[0][i]['menu_id'];
+            for (var j in arrPoint[keyF]) {
+                var keyS = arrPoint[keyF][j]['menu_id'];
+                for (var k in arrPoint[keyS]) {
+                    var strCondition = '';
+                    if(arrPoint[keyS][k]['menu_handle'] >= 0.8){
+                        strCondition = 'green_block';
+                    }else if(arrPoint[keyS][k]['menu_handle'] < 0.8 && arrPoint[keyS][k]['menu_handle'] != 0 ){
+                        strCondition = 'red_block';
+                    }else{
+                        strCondition = 'gray_block';
+                    }
+                    strPointHandleCondition +="<li class='"+strCondition+"'><div><span class='color-yellow'>"+arrPoint[keyS][k]['menu_name']+"</span>掌握程度："+(arrPoint[keyS][k]['menu_handle']*100).toFixed(4)+"%</div></li>";
+                };
+            };
+            strPointHandleCondition += "</ul></div>";
+        }
+        $('#tab-knowledge').empty().append(strPointHandleCondition);
+    });
+}
+/**
+ * [getUserSearchDate 获取考核的日期]
+ * @param  {[type]} aData [description]
+ * @return {[type]}       [description]
+ */
+function getUserSearchDateFour(aData){
+    //获取考核周期
+    ajaxPost('/pubblico/getUserSearchDate',aData,function(data){
+        var strText = '';
+        for(var i in data){
+            strText += "<option value='"+data[i].value+"'>"+data[i].title+"</option>";
+        }
+        $(".check-cycle4").append(strText);
+    });
+}
+/**
+ * [searchPointTrend 查找规定范围的数据]
+ * @return {[type]} [description]
+ */
+function searchPointHandleCondition() {
+    $('.search-handle-condition-data-button').click(function(){
+        //获取日期
+        var cycleDays = $(".check-cycle4").val();
+        //获取知识点
+        aData = {student_id:intStudentId,cycle_days:cycleDays}
+        getPointHandleCondition(aData);
+    });
+}
+</script>

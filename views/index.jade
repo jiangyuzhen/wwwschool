@@ -1,0 +1,9 @@
+extends layout
+
+block append content
+  #logindiv
+    div
+      form
+        input(type='text', name='username', placeholder='请输入您的用户名', style='margin: 62px 0 0 94px')
+        input(type='password', name='password', placeholder='请输入您的密码', style='margin: 37px 0 0 94px')
+        button(type='submit') 登录

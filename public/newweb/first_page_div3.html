@@ -1,0 +1,86 @@
+
+                    <div id="realcontent" class="class-list">
+                        <!--<div class="adclass_div">-->
+                        <!--<div class="realcontent_a_p">-->
+                        <!--<p class="left_p_content">-->
+                        <!--<span class="span_title">2015级1班</span>-->
+                        <!--</p>-->
+
+                        <!--<p class="bottom_p_content">-->
+                        <!--<span class="s_gap">班级代码:<span>589511</span></span>-->
+                        <!--<span class="s_gap">班级总人数:<span>48</span></span>-->
+                        <!--<span class="s_gap">未验证人数:<span>1</span></span>-->
+                        <!--</p>-->
+                        <!--</div>-->
+                        <!--<button type="button" class="orange_btn float_right" style="margin-right:56px;">学生成绩详情-->
+                        <!--</button>-->
+                        <!--<button type="button" class="orange_btn float_right">班级管理</button>-->
+                        <!--</div>-->
+                        <!--<div class="adclass_div">-->
+                        <!--<div class="realcontent_a_p">-->
+                        <!--<p class="left_p_content">-->
+                        <!--<span class="span_title">2015级2班</span>-->
+                        <!--</p>-->
+
+                        <!--<p class="bottom_p_content">-->
+                        <!--<span class="s_gap">班级代码:<span>589511</span></span>-->
+                        <!--<span class="s_gap">班级总人数:<span>48</span></span>-->
+                        <!--<span class="s_gap">未验证人数:<span>1</span></span>-->
+                        <!--</p>-->
+                        <!--</div>-->
+                        <!--<button type="button" class="orange_btn float_right" style="margin-right:56px;"-->
+                        <!--type="button">学生成绩详情-->
+                        <!--</button>-->
+                        <!--<button type="button" class="orange_btn float_right" type="button">班级管理</button>-->
+                        <!--</div>-->
+                        <!--<div class="adclass_div">-->
+                        <!--<div class="realcontent_a_p">-->
+                        <!--<p class="left_p_content">-->
+                        <!--<span class="span_title">2015级3班</span>-->
+                        <!--</p>-->
+
+                        <!--<p class="bottom_p_content">-->
+                        <!--<span class="s_gap">班级代码:<span>589511</span></span>-->
+                        <!--<span class="s_gap">班级总人数:<span>48</span></span>-->
+                        <!--<span class="s_gap">未验证人数:<span>1</span></span>-->
+                        <!--</p>-->
+                        <!--</div>-->
+                        <!--<button type="button" class="orange_btn float_right" style="margin-right:56px;"-->
+                        <!--type="button">学生成绩详情-->
+                        <!--</button>-->
+                        <!--<button type="button" class="orange_btn float_right" type="button">班级管理</button>-->
+                        <!--</div>-->
+                    </div>
+
+<script type="text/javascript">
+
+    $(function () {
+        get_class_list(3);
+    });
+
+    function get_class_list(limit) {
+        ajaxPost('http://school.tiku365.cn/manage_class/getClassList', {limit: limit}, function (Data) {
+            var data = Data.class;
+            var str = '';
+            var is_edit=Data.is_edit;
+            for (var i in data) {
+                str += '<div class="adclass_div" system="' + data[i].s_y_f_id + '" system_name="' + data[i].parent_name + data[i].s_y_f_name + '"><div class="realcontent_a_p"><p class="left_p_content"><span class="span_title">' + data[i].parent_name + data[i].s_y_f_name + '</span></p><p class="bottom_p_content"><span class="s_gap">班级代码:<span>' + data[i].verify_code + (data[i].verify_status == 1 ? "(开放)" : "(不开放)") + '</span></span><span class="s_gap">班级总人数:<span>' + data[i].verified + '</span></span><span class="s_gap">未验证人数:<span>' + data[i].unverified + '</span></span></p></div><button type="button" class="orange_btn float_right student-score-list" style="margin-right:56px;">学生成绩详情</button><button type="button" class="is_edit orange_btn float_right class-admin-verify">班级管理</button></div>';
+            }
+            $(".class-list").append(str);
+            if(is_edit!=1){
+                $('.is_edit').remove();
+            }
+        });
+    }
+
+    $(document).on('click', '.student-score-list', function () {
+        window.location.href = "student_score_list.html?system=" + $(this).parent().attr('system') + "&system_name=" + encodeURI($(this).parent().attr('system_name'));
+    });
+
+    $(document).on('click', '.class-admin-verify', function () {
+        window.location.href = "class_admin_verify.html?system=" + $(this).parent().attr('system');
+    });
+
+</script>
+
+</html>

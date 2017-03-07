@@ -1,0 +1,198 @@
+                <!-- div1中的内容 -->
+                    <div id="tab-multiple">
+                        <p style="font-size:14px; color:#666666; margin:0 0 15px 0;">整体概要：</p>
+                        <div>
+                            <div class="span_block block_bcolor_red">
+                                <p style="margin:48px 0 5px 0">学生预测能得</p>
+                                <p><span class="forecast-score" style="font-size:32px">0</span><span>分</span></p>
+                            </div>
+                            <div class="span_block block_bcolor_green">
+                                <p style="margin:48px 0 5px 0">过去7天平均每位学生正确率</p>
+                                <p><span class="accuracy" style="font-size:32px">0</span><span>%</span></p>
+                            </div>
+                            <div class="span_block block_bcolor_yellow">
+                                <p style="margin:48px 0 5px 0">过去7天平均每位学生答题量</p>
+                                <p><span class="total-question-num" style="font-size:32px">0</span><span>题</span></p>
+                            </div>
+                            <div class="span_block block_bcolor_blue">
+                                <p style="margin:48px 0 5px 0">过去7天平均每位学生总练习时长</p>
+                                <p><span class="practice-time" style="font-size:32px">0</span><span>min</span></p>
+                            </div>
+                        </div>
+                        <p style="font-size:14px;color:#666666; margin:38px 0 15px 0;">整体趋势变化图：</p>
+                        <div>
+                            <sapn>
+                                <button class="forecast-score-button cap_gray_btn">成绩</button>
+                                <button class="total-num-button cap_gray_btn">答题量</button>
+                                <button class="accuracy-button cap_gray_btn">正确率</button>
+                                <button class="practice-time-button cap_gray_btn">练习时长</button>
+                                <button class="practice-speed-button cap_gray_btn">答题速度</button>
+                            </sapn>
+                            <sapn>
+                                <button type="submit" class="search-trend-data-button cap_orange_btn" style="float:right">确认</button>
+                                <select class="cap_select check-cycle1" id="" style="float:right">
+                                    <option value="0">选择您要考核的周期</option>
+                                </select>
+                            </sapn>
+                        </div>
+                        <div id="maps-one" style="height:400px;padding:1px;"></div>
+                <!-- div1中的内容 -->
+            </div>
+<script type="text/javascript">
+    var seriesForecastScore = new Array();
+    var seriesTotalNum = new Array();
+    var seriesAccuracy = new Array();
+    var seriesPracticeTime = new Array();
+    var seriesPracticeSpeed = new Array();
+    var arrDate = new Array();
+
+$(function(){
+    getTotalData({student_id:intStudentId});
+    setUserSearch();
+    getTotalTrendData({student_id:intStudentId});
+});
+
+
+// 灰色椭圆按钮添加点击事件
+$(".cap_gray_btn").click(function(event) {
+    $(".cap_gray_btn").removeClass('cur_orange');
+    $(this).addClass('cur_orange')
+});
+
+/**
+ * [getTotalData 综合概要----整体概要]
+ * @return {[type]} [description]
+ */
+function getTotalData(aData) {
+    ajaxPost('/student/getTotalData',aData,function(data){
+        data.practice_time = data.practice_time / 60;
+        $('.forecast-score').empty().append(data.forecast_score.toFixed(2));
+        $('.accuracy').empty().append((data.accuracy*100).toFixed(2));
+        $('.total-question-num').empty().append(data.total_num.toFixed(2));
+        $('.practice-time').empty().append(data.practice_time.toFixed(2));
+    });
+}
+/**
+ * [getUserLevel 获取用户能查看的组织与日期，并设置查询事件]
+ * @return [type] [description]
+ */
+function setUserSearch(aData){
+    //获取考核周期
+    getUserSearchDateOne(aData);
+    //添加点击搜索事件
+    $('.search-trend-data-button').click(function(){
+        $(".cap_gray_btn").removeClass('cur_orange');
+        var organizationId = $(".check-object").val();
+        var cycleDays = $(".check-cycle1").val();
+        //修改全局变量，查询日期
+        console.log(cycleDays);
+        intCycleDays = cycleDays;
+        getTotalTrendData({student_id:intStudentId,cycle_days:cycleDays});
+    });
+}
+/**
+ * [getUserSearchDate 获取考核的日期]
+ * @param  {[type]} aData [description]
+ * @return {[type]}       [description]
+ */
+function getUserSearchDateOne(aData){
+    //获取考核周期
+    ajaxPost('/pubblico/getUserSearchDate',aData,function(data){
+        var strText = '';
+        for(var i in data){
+            strText += "<option value='"+data[i].value+"'>"+data[i].title+"</option>";
+        }
+        $(".check-cycle1").append(strText);
+    });
+}
+/**
+ * [getTotalTrendData 获取趋势图数据]
+ * @param  {[type]} aData [搜索选项]
+ * @return {[type]}       [description]
+ */
+function getTotalTrendData(aData) {
+    ajaxPost('/student/getTotalTrendData',aData,function(data){
+        $('#maps-one').empty();
+        var forecast_score = new Array();
+        var total_num = new Array();
+        var accuracy = new Array();
+        var practice_time = new Array();
+        var practice_speed = new Array();
+        var legendName = new Array();
+        var arrDate = new Array();
+        for(var i = data.length - 1; i >= 0 ;i--){
+            arrDate.push(data[i].date);
+            forecast_score.push(data[i].forecast_score);
+            total_num.push(data[i].total_num);
+            practice_time.push(data[i].practice_time);
+            if(data[i].total_num != 0){
+                accuracy.push(data[i].right_num / data[i].total_num * 100);
+                practice_speed.push(data[i].practice_time / data[i].total_num);
+            }else{
+                accuracy.push(0);
+                practice_speed.push(0);
+            }
+        }
+        /*形成画图数据*/
+        var middleForecastScoreObject = new Object();
+        middleForecastScoreObject.name = strStudentName;
+        middleForecastScoreObject.type = 'line';
+        middleForecastScoreObject.data = forecast_score;
+        seriesForecastScore = [];
+        seriesForecastScore.push(middleForecastScoreObject);
+
+        var middleTotalNumObject = new Object();
+        middleTotalNumObject.name = strStudentName;
+        middleTotalNumObject.type = 'line';
+        middleTotalNumObject.data = total_num;
+        seriesTotalNum = [];
+        seriesTotalNum.push(middleTotalNumObject);
+
+        var middleTotalNumObject = new Object();
+        middleTotalNumObject.name = strStudentName;
+        middleTotalNumObject.type = 'line';
+        middleTotalNumObject.data = accuracy;
+        seriesAccuracy = [];
+        seriesAccuracy.push(middleTotalNumObject);
+
+        var middleTotalNumObject = new Object();
+        middleTotalNumObject.name = strStudentName;
+        middleTotalNumObject.type = 'line';
+        middleTotalNumObject.data = practice_time;
+        seriesPracticeTime = [];
+        seriesPracticeTime.push(middleTotalNumObject);
+
+        var middleTotalNumObject = new Object();
+        middleTotalNumObject.name = strStudentName;
+        middleTotalNumObject.type = 'line';
+        middleTotalNumObject.data = practice_speed;
+        seriesPracticeSpeed = [];
+        seriesPracticeSpeed.push(middleTotalNumObject);
+        //计算天数
+        var arrDates = new Array();
+        for (var i = 0; i <arrDate.length; i++) {
+            arrDates.push(arrDate[i]);
+        };
+        legendName.push(strStudentName);
+        /*初始话图片*/
+        DrawEchart('maps-one','','',arrDates,'分',legendName,seriesForecastScore);
+        $('.forecast-score-button').click(function(){
+             DrawEchart('maps-one','','',arrDates,'题',legendName,seriesForecastScore);
+        });
+        $('.total-num-button').click(function(){
+             DrawEchart('maps-one','','',arrDates,'题',legendName,seriesTotalNum);
+        });
+        $('.accuracy-button').click(function(){
+             DrawEchart('maps-one','','',arrDates,'%',legendName,seriesAccuracy);
+        });
+        $('.practice-time-button').click(function(){
+             DrawEchart('maps-one','','',arrDates,'秒',legendName,seriesPracticeTime);
+        });
+        $('.practice-speed-button').click(function(){
+             DrawEchart('maps-one','','',arrDates,'秒/题',legendName,seriesPracticeSpeed);
+        });
+    });
+}
+
+
+</script>

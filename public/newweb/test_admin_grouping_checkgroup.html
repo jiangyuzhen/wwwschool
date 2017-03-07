@@ -1,0 +1,403 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>测试管理>分组管理>查看分组详情</title>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div id="left-navigation"></div>
+    <div id="mainbody">
+        <div class="mainbody_title_box">测试管理>分组管理>查看分组详情</div>
+        <div class="mainbody_bottom" style="border:none">
+            <div class='tab-container'>
+                <div class='panel-container'>
+                    <div class="text_right" style="margin-top: -38px; margin-bottom:28px;">
+                        <a id="btn_adduser" href="test_admin_grouping_checkgroup_add.html" class="orange_btn">增添人员</a>
+                    </div>
+                    
+                    <div class="font_size_14" style="margin-bottom:13px; margin-top:28px; color:#787878;">
+                            <span>真实姓名：</span>
+                            <input name="name" type="text" class="cap_input_small border_color_black"/>
+
+                            <span>学籍号：</span>
+                            <input name="sno" type="text" class="cap_input_small border_color_black"/><br />
+
+                            <div id="select" style="display:inline-block">
+                                <span>所属层级：</span>
+                                <select name="category_1" id="category_1" class="system cap_select" onChange="change('category_1');">
+                                    <option value="">请选择</option>
+
+                                </select>
+                            </div><br />
+                            <span>数据时间：</span>
+                            <select id="select_datatime" class="cap_select" name="days">
+                                <option value="7">最近七天</option>
+                                <option value="30">最近三十天</option>
+                                <option value="60">最近六十天</option>
+                            </select>
+                            <button class="cap_orange_btn search" type="button">查询</button>
+                    </div>
+
+                    <table class="gridtable student_list" style="border-radius: 5px;">
+                            <tr class="fontsize_14 bg_gray">
+                                <td>全选<input id="all_checked" type="checkbox" style="vertical-align: sub;" /></td>
+                                <td>考核对象</td>
+                                <td>所在层级</td>
+                                <td>学籍号</td>
+                                <td>
+                                    练习时间
+                                    <i class="order_by fa fa-long-arrow-down show_cursor" order="desc"
+                                       order_by="practice_time_order"></i>
+                                    <i class="order_by fa fa-long-arrow-up show_cursor" order="asc"
+                                       order_by="practice_time_order"></i>
+                                </td>
+                                <td>
+                                    答题数
+                                    <i class="order_by fa fa-long-arrow-down show_cursor" order="desc"
+                                       order_by="total_num_order"></i>
+                                    <i class="order_by fa fa-long-arrow-up show_cursor" order="asc"
+                                       order_by="total_num_order"></i>
+                                </td>
+                                <td>
+                                    正确率
+                                    <i class="order_by fa fa-long-arrow-down show_cursor" order="desc"
+                                       order_by="accuracy_order"></i>
+                                    <i class="order_by fa fa-long-arrow-up show_cursor" order="asc"
+                                       order_by="accuracy_order"></i>
+                                </td>
+                                <td>
+                                    平均答题速度
+                                    <i class="order_by fa fa-long-arrow-down show_cursor" order="desc"
+                                       order_by="practice_speed_order"></i>
+                                    <i class="order_by fa fa-long-arrow-up show_cursor" order="asc"
+                                       order_by="practice_speed_order"></i>
+                                </td>
+                                <td>操作</td>
+                            </tr>
+                            <!-- <tr class="fontsize_14">
+                                <td><input type="checkbox" /></td>
+                                <td>王二毛</td>
+                                <td>传媒学院</td>
+                                <td>2015020333</td>
+                                <td><span>10</span>分<span>20</span>秒</td>
+                                <td><span>80</span>题</td>
+                                <td class="font_color_green"><span>60</span>%</td>
+                                <td><span>5</span>秒</td>
+                                <td>
+                                    <a href="#" class="operate font_color_red font_color_green">移除学习组</a>
+                                </td>
+                            </tr> -->
+                        </table>
+                        <button id="batchdelete" type="button" class="square_orange_btn" style="font-size:18px; margin-top:28px">批量移出</button>
+                        <div class="mainbody_white_box show_pages text_center" style="border:none;margin-top:20px;"></div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+    <div id="foot"></div>
+
+</body>
+<script type="text/javascript">
+$(function(){
+    $("#header").load("header.html");
+    $("#left-navigation").load("left.html", function() {
+        $("ul.accordion>li:eq(2)").addClass('open').children().show().find('li:eq(2)').children().addClass('bcolor');
+    });
+    $("#foot").load("footer.html");
+    var get_groupid=getUrlParam('groupid');
+    getStudentList(1,get_groupid, '', '', '', '', '', '', '', '');
+    searchStudent();
+    orderSearch();
+    getFirstSystemForm();
+    allChecked();
+    batchDeleteUser();
+    addUserClick();
+});
+
+// 初始化 groupid uidstr
+var arr_userid=new Array();
+line_color_change();
+tableHoverEvent();
+//表格列的颜色 交替显示
+function line_color_change() {
+    var obj = $("tr");
+    obj.each(function (index, el) {
+        if (parseInt(index) % 2 != 0) {
+            $(this).addClass('bg_white');
+        }
+    });
+}
+// 列表 hover事件
+function tableHoverEvent(){
+    $("tr").hover(function() {
+        $(this).addClass('bg_gray');
+    }, function() {
+        $(this).removeClass('bg_gray');
+    });
+}
+
+
+// 增添人员按钮 点击事件
+function addUserClick(){
+    $("#btn_adduser").click(function(event) {
+        var get_groupid=getUrlParam('groupid');
+        $(this).prop('href', 'test_admin_grouping_checkgroup_add.html?groupid='+get_groupid);
+    });
+}
+
+
+// 全选按钮事件
+function allChecked(){
+    $("#all_checked").click(function(event) {
+        if($("#all_checked").is(':checked')){
+            $(".stu_check").prop('checked', 'checked');
+        }
+        else{
+            $(".stu_check").prop('checked', false);
+        }
+    });
+}
+
+// arr转换成str串
+function arrayToStr(arr){
+    var str='';
+    for(var i in arr){
+        str+=arr[i]+",";
+    }
+    str=str.substring(0,str.length-1);
+    return str;
+}
+
+
+// 批量删除按钮事件
+function batchDeleteUser(){
+    $("#batchdelete").click(function(event) {
+        if ($(".stu_check:checked").length==0) {
+            alert("请选择学生");
+        } else{
+            var arr_uid=new Array();
+            var get_groupid=getUrlParam('groupid');
+            $(".stu_check:checked").each(function(index, el) {
+                var uid=$(this).attr('user_id');
+                arr_uid.push(uid);
+            });
+            arr_uid=arrayUnique(arr_uid); //去重
+            var str_uid=arrayToStr(arr_uid);//arr->str串
+            deleteGroupUser(get_groupid,str_uid);
+            addDeleteCss(arr_uid);
+        }
+        
+    });
+}
+
+function addDeleteCss(arr){
+    for(var i in arr){
+        $(".choose"+arr[i]).removeClass('font_color_red').text('加入学习组').addClass('font_color_green').addClass('outgroup');
+    }
+}
+
+//单个学生移出分组操作
+function deleteSingleStudent(){
+    $(".operate").on('click', function(event) {
+        var uid=$(this).attr('user_id');
+        var get_groupid=getUrlParam('groupid');
+        if ($(this).hasClass('outgroup')) {
+            $(this).removeClass('font_color_green').text('移出学习组').addClass('font_color_red').removeClass('outgroup');
+            addGroupUser(get_groupid,uid);
+        }else{
+            $(this).removeClass('font_color_red').text('加入学习组').addClass('font_color_green').addClass('outgroup');
+            deleteGroupUser(get_groupid,uid);
+        }
+    });
+}
+
+// array去重
+function arrayUnique(arr){
+    var res=[];
+    var json={};
+    for(var i=0; i<arr.length; i++){
+        if(!json[arr[i]]){
+            res.push(arr[i]);
+            json[arr[i]]=1;
+        }
+    }
+    return res;
+}
+
+// 添加学习组成员 ajax 
+function addGroupUser(groupid,useridstr){
+    ajaxPost('/group/addGroupUser', {group_id: groupid,user_id_str: useridstr}, function (Data) {
+            if (Data.flag==1) {alert("添加成功")};
+        },false);
+}
+// 移出学习组成员 ajax 
+function deleteGroupUser(groupid,useridstr){
+    ajaxPost('/group/delGroupUser', {group_id: groupid,user_id_str: useridstr}, function (Data) {
+            if (Data.flag==1) {alert("删除成功")};
+        },false);
+}
+
+
+function getFirstSystemForm() {
+        ajaxPost('/pubblico/getNextSystemForm', {parent_id: 0}, function (Data) {
+            var data = Data.system_form;
+            var str = '';
+            for (var i in data) {
+                str += '<option value=' + data[i].s_y_f_id + '>' + data[i].s_y_f_name + '</option>';
+            }
+            $('#category_1').append(str);
+        });
+
+    }
+
+    //添加分页按钮点击事件
+    function page_click() {
+        $(".pages").click(function () {
+            var page = $(this).attr("page-id");
+            searchPageStudent(page);
+        });
+    }
+
+    function change(val) {
+        var str = val; //select的id
+        var num; //当前级数
+        var id; // 分类id
+        num = str.substr(9, 10);
+        var nownum = parseInt(num) + 1; // 将字符串转换为数字
+        id = $("#" + str + "").val();
+        var r = /^[1-9]+[0-9]*]*$/;　//正整数
+        if (!r.test(id)) {
+            //清空过时的选项
+            $(".system").each(function (index) {
+                if (index + 1 > num) {
+                    $(this).remove();
+                }
+            })
+
+            return false;
+        }
+        ajaxPost('/pubblico/getNextSystemForm', {parent_id: id}, function (Data) {
+            var result = Data.system_form;
+            if (result != 0) {
+                var html = "<select name='category_" + nownum + "' id='category_" + nownum + "' class='system cap_select' onChange=change('category_" + nownum + "'); >";
+                html += "<option value=''>请选择分类 </option>";
+                var datas = eval(result);
+                $.each(datas, function (i, val) {
+                    html += "<option value='" + val.s_y_f_id + "' >" + val.s_y_f_name + "</option>";
+                });
+                html += "</select>";
+                //清空过时的选项
+                $(".system").each(function (index) {
+                    if (index + 1 > num) {
+                        $(this).remove();
+                    }
+                })
+                $("#select").append(html);
+            } else {
+                //清空过时的选项
+                $(".system").each(function (index) {
+                    if (index + 1 > num) {
+                        $(this).remove();
+                    }
+                })
+            }
+        });
+    }
+
+    function orderSearch() {
+        $('.order_by').click(function () {
+            $('.order_by').removeClass('font_color_red');
+            $('.order_by').removeClass('this_order');
+            $(this).addClass('font_color_red');
+            $(this).addClass('this_order');
+            searchPageStudent(1);
+        })
+    }
+
+    function searchStudent() {
+        $('.search').click(function () {
+            $('.order_by').removeClass('font_color_red');
+            $('.order_by').removeClass('this_order');
+            searchPageStudent(1);
+        });
+    }
+
+    function searchPageStudent(page) {
+        var system = '';
+        if ($('#category_1').val()) {
+            system += ',';
+            for (var i = 1; i <= $('.system').length; i++) {
+                if ($('#category_' + i).val()) {
+                    system += $('#category_' + i).val() + ',';
+                }
+            }
+            ;
+        }
+        var groupId=getUrlParam('groupid');
+        var name = $("input[name='name']").val();
+        var sno = $("input[name='sno']").val();
+        var days = $("select[name='days']").val();
+        $('.student_tr').empty();
+        var order = $('.this_order').attr('order');
+        var order_by = $('.this_order').attr('order_by');
+        if (typeof (order) != 'undefined') {
+            if (order_by == 'practice_time_order') {
+                getStudentList(page, groupId, name, sno, days, system, order, '', '', '');
+            } else if (order_by == 'total_num_order') {
+                getStudentList(page, groupId, name, sno, days, system, '', order, '', '');
+            } else if (order_by == 'accuracy_order') {
+                getStudentList(page, groupId, name, sno, days, system, '', '', order, '');
+            } else {
+                getStudentList(page, groupId, name, sno, days, system, '', '', '', order);
+            }
+        } else {
+            getStudentList(page,groupId, name, sno, days, system, '', '', '', '');
+        }
+    }
+
+    function getStudentList(pages, groupid, name, sno, days, system, practice_time_order, total_num_order, accuracy_order, practice_speed_order) {
+        ajaxPost('/group/getGroupUserList', {
+            page: pages,
+            group_id:groupid,
+            sno: sno,
+            days: days,
+            name: name,
+            system: system,
+            practice_time_order: practice_time_order,
+            total_num_order: total_num_order,
+            accuracy_order: accuracy_order,
+            practice_speed_order: practice_speed_order,
+        }, function (Data) {
+            var data = Data.user;
+            var page = Data.page;
+            var total_page = Data.total_page;
+            var str = '';
+            for (var i in data) {
+                var system_name = '';
+                for (var j in data[i].system_name) {
+                    system_name += '<p>' + data[i].system_name[j] + '<p>';
+                }
+                var strSno = '';
+                for (var j in data[i].sno) {
+                    strSno += '<p>' + data[i].sno[j] + '<p>';
+                }
+                str += '<tr class="fontsize_14 student_tr" user_id=' + data[i].user_id + '><td><input type="checkbox" class="stu_check check'+data[i].user_id+'" user_id=' + data[i].user_id + '  /></td><td>' + data[i].user_realname + '</td><td>' + system_name + '</td><td>' + strSno + '</td><td><span>' + (data[i].practice_time / 60).toFixed(1) + '</span>分钟</td><td><span>' + (data[i].total_num / 1).toFixed(1) + '</span>题</td><td><span class="' + (data[i].accuracy * 100 <= 30 ? "font_color_red" : "") + '">' + (data[i].accuracy * 100).toFixed(1) + '%</span></td><td><span>' + (data[i].practice_speed / 1).toFixed(1) + '</span>秒</td><td><a user_id=' + data[i].user_id + ' class="choose'+ data[i].user_id +'  show_cursor operate font_color_red">移出学习组</a></td></tr>';
+            }
+            $(".student_list").append(str);
+            line_color_change();
+            tableHoverEvent();
+            showPage(page, total_page);
+            deleteSingleStudent();
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>教师管理</title>
+</head>
+
+<body>
+<div id="header"></div>
+<div id="left-navigation"></div>
+<div id="mainbody">
+    <div class="mainbody_title_box">教师管理</div>
+    <div class="mainbody_bottom">
+        <div class='tab-container'>
+            <div class='panel-container'>
+                <div style="margin-top:-50px; margin-bottom:13px; color:#787878; font-size:14px; ">
+                    <span>教师姓名：</span>
+                    <input name="name" type="text" class="cap_input_small border_color_black"/>
+                    <span class="set_system">所属层级：</span>
+
+                    <!--<div id="select_1" data-id="1" style="display:inline-block" class="select_system">-->
+                        <!--<select name="category_1" id="category_1" class="system_1 cap_select" onChange="system_change('category_1');">-->
+                            <!--<option value="">请选择</option>-->
+
+                        <!--</select>-->
+                    <!--</div>-->
+                    <button class="cap_orange_btn search" type="button">查询</button>
+                </div>
+                <table class="gridtable teacher_list" style="border-radius: 5px;">
+                    <tr class="fontsize_14 bg_gray">
+                        <td>真实姓名</td>
+                        <td>所在层级</td>
+                        <td>
+                            平均每位学生总答题量
+                            <i class="order_by fa fa-long-arrow-down font_color_balck show_cursor" order="desc"
+                               order_by="total_num_order"></i>
+                            <i class="order_by fa fa-long-arrow-up font_color_balck show_cursor" order="asc"
+                               order_by="total_num_order"></i>
+                        </td>
+                        <td>
+                            平均每位学生总练习时长
+                            <i class="order_by fa fa-long-arrow-down font_color_balck show_cursor" order="desc"
+                               order_by="practice_time_order"></i>
+                            <i class="order_by fa fa-long-arrow-up font_color_balck show_cursor" order="asc"
+                               order_by="practice_time_order"></i>
+                        </td>
+                        <td>
+                            平均每位学生正确率
+                            <i class="order_by fa fa-long-arrow-down font_color_balck show_cursor" order="desc"
+                               order_by="accuracy_order"></i>
+                            <i class="order_by fa fa-long-arrow-up font_color_balck show_cursor" order="asc"
+                               order_by="accuracy_order"></i>
+                        </td>
+                        <td>操作</td>
+                    </tr>
+                    <!--<tr class="fontsize_14">-->
+                    <!--<td>王二毛</td>-->
+                    <!--<td>传媒学院</td>-->
+                    <!--<td><span>65</span>分</td>-->
+                    <!--<td><span>65</span>题</td>-->
+                    <!--<td>启用</td>-->
+                    <!--<td><a href="teacher_admin_checkdetail.html" class="operate font_color_orange">查看详情</a></td>-->
+                    <!--</tr>-->
+                    <!--<tr class="fontsize_14">-->
+                    <!--<td>王二毛</td>-->
+                    <!--<td>传媒学院</td>-->
+                    <!--<td><span>65</span>分</td>-->
+                    <!--<td><span>65</span>题</td>-->
+                    <!--<td>启用</td>-->
+                    <!--<td><a href="teacher_admin_checkdetail.html" class="operate font_color_orange">查看详情</a></td>-->
+                    <!--</tr>-->
+                    <!--<tr class="fontsize_14">-->
+                    <!--<td>王二毛</td>-->
+                    <!--<td>传媒学院</td>-->
+                    <!--<td><span>65</span>分</td>-->
+                    <!--<td><span>65</span>题</td>-->
+                    <!--<td>启用</td>-->
+                    <!--<td><a href="teacher_admin_checkdetail.html" class="operate font_color_orange">查看详情</a></td>-->
+                    <!--</tr>-->
+                    <!--<tr class="fontsize_14">-->
+                    <!--<td>王二毛</td>-->
+                    <!--<td>传媒学院</td>-->
+                    <!--<td><span>65</span>分</td>-->
+                    <!--<td><span>65</span>题</td>-->
+                    <!--<td>启用</td>-->
+                    <!--<td><a href="teacher_admin_checkdetail.html" class="operate font_color_orange">查看详情</a></td>-->
+                    <!--</tr>-->
+                    <!--<tr class="fontsize_14">-->
+                    <!--<td>王二毛</td>-->
+                    <!--<td>传媒学院</td>-->
+                    <!--<td><span>65</span>分</td>-->
+                    <!--<td><span>65</span>题</td>-->
+                    <!--<td>启用</td>-->
+                    <!--<td><a href="teacher_admin_checkdetail.html" class="operate font_color_orange">查看详情</a></td>-->
+                    <!--</tr>-->
+                    <!--<tr class="fontsize_14">-->
+                    <!--<td>王二毛</td>-->
+                    <!--<td>传媒学院</td>-->
+                    <!--<td><span>65</span>分</td>-->
+                    <!--<td><span>65</span>题</td>-->
+                    <!--<td>启用</td>-->
+                    <!--<td><a href="teacher_admin_checkdetail.html" class="operate font_color_orange">查看详情</a></td>-->
+                    <!--</tr>-->
+                    <!--<tr class="fontsize_14">-->
+                    <!--<td>王二毛</td>-->
+                    <!--<td>传媒学院</td>-->
+                    <!--<td><span>65</span>分</td>-->
+                    <!--<td><span>65</span>题</td>-->
+                    <!--<td>启用</td>-->
+                    <!--<td><a href="teacher_admin_checkdetail.html" class="operate font_color_orange">查看详情</a></td>-->
+                    <!--</tr>-->
+                    <!--<tr class="fontsize_14">-->
+                    <!--<td>王二毛</td>-->
+                    <!--<td>传媒学院</td>-->
+                    <!--<td><span>65</span>分</td>-->
+                    <!--<td><span>65</span>题</td>-->
+                    <!--<td>启用</td>-->
+                    <!--<td><a href="teacher_admin_checkdetail.html" class="operate font_color_orange">查看详情</a></td>-->
+                    <!--</tr>-->
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="mainbody_white_box show_pages" style="text-align:center">
+        <!--<a href="" class="pages">首页</a>-->
+        <!--<a href="" class="pages">上一页</a>-->
+        <!--<a href="" class="pages">1</a>-->
+        <!--<a href="" class="pages pagescur">2</a>-->
+        <!--<a href="" class="pages">3</a>-->
+        <!--<a href="" class="pages">下一页></a>-->
+        <!--<a href="" class="pages">尾页</a>-->
+    </div>
+</div>
+
+<div id="foot"></div>
+
+</body>
+<script type="text/javascript">
+     $("#header").load("header.html");
+    $("#left-navigation").load("left.html", function() {
+        $("ul.accordion>li:eq(4)").addClass('open');
+    });
+    $("#foot").load("footer.html");
+
+    line_color_change();
+    //表格列的颜色 交替显示
+    function line_color_change() {
+        var obj = $("tr");
+        obj.each(function (index, el) {
+            if (parseInt(index) % 2 != 0) {
+                $(this).addClass('bg_white');
+            }
+        });
+    }
+
+tableHoverEvent();
+        // 列表 hover事件
+function tableHoverEvent(){
+    $("tr").hover(function() {
+        $(this).addClass('bg_gray');
+    }, function() {
+        $(this).removeClass('bg_gray');
+    });
+}
+
+    $(function () {
+        getTeacherList(1, '', '', '', '', '');
+        searchTeacher();
+        orderSearch();
+        setSystem('.set_system',1);
+    });
+
+
+
+    //添加分页按钮点击事件
+    function page_click() {
+        $(".pages").click(function () {
+            var page = $(this).attr("page-id");
+            searchPageTeacher(page);
+        });
+    }
+
+    function orderSearch() {
+        $('.order_by').click(function () {
+            $('.order_by').removeClass('font_color_red');
+            $('.order_by').removeClass('this_order');
+            $(this).addClass('font_color_red');
+            $(this).addClass('this_order');
+            searchPageTeacher(1);
+        })
+    }
+
+    function searchTeacher() {
+        $('.search').click(function () {
+            $('.order_by').removeClass('font_color_red');
+            $('.order_by').removeClass('this_order');
+            searchPageTeacher(1);
+        });
+    }
+
+    function searchPageTeacher(page) {
+        var system = '';
+        if ($('#category_1').val()) {
+            system += ',';
+            for (var i = 1; i <= $('.system_1').length; i++) {
+                if ($('#category_' + i).val()) {
+                    system += $('#category_' + i).val() + ',';
+                }
+            }
+        }
+        var name = $("input[name='name']").val();
+        $('.teacher_tr').empty();
+        var order = $('.this_order').attr('order');
+        var order_by = $('.this_order').attr('order_by');
+        if (typeof (order) != 'undefined') {
+            if (order_by == 'practice_time_order') {
+                getTeacherList(page, name, system, order, '', '');
+            } else if (order_by == 'total_num_order') {
+                getTeacherList(page, name, system, '', order, '');
+            } else {
+                getTeacherList(page, name, system, '', '', order);
+            }
+        } else {
+            getTeacherList(page, name, system, '', '', '');
+        }
+    }
+
+    function getTeacherList(pages, name, system, practice_time_order, total_num_order, accuracy_order) {
+        ajaxPost('/teacher/getTeacherList', {
+            page: pages,
+            name: name,
+            system: system,
+            practice_time_order: practice_time_order,
+            total_num_order: total_num_order,
+            accuracy_order: accuracy_order,
+        }, function (Data) {
+            var data = Data.teacher;
+            var page = Data.page;
+            var total_page = Data.total_page;
+            var str = '';
+            for (var i in data) {
+                var system_name = '';
+                for (var j in data[i].s_y_f_name) {
+                    system_name += '<p>' + data[i].s_y_f_name[j] + '<p>';
+                }
+                str += '<tr class="fontsize_14 teacher_tr" s_m_id=' + data[i].s_m_id + '><td>' + data[i].s_m_realname + '</td><td>' + system_name + '</td><td>' + data[i].total_num.toFixed(1) + '题</td><td>' + (data[i].practice_time / 60).toFixed(1) + '分钟</td><td><span class="'+(data[i].accuracy*100<=30?"font_color_red":"")+'">' + (data[i].accuracy * 100).toFixed(1) + '%</span></td><td><a href="teacher_admin_checkdetail.html?s_m_id=' + data[i].s_m_id + '&system=' + encodeURI(data[i].s_y_f_name.join(",")) + '&total_num=' + data[i].total_num.toFixed(1) + '&practice_time=' + (data[i].practice_time / 60).toFixed(1) + '&accuracy=' + (data[i].accuracy * 100).toFixed(1) + '&forecast_score='+(data[i].forecast_score).toFixed(1)+'" class="operate font_color_orange">查看详情</a></td></tr>';
+            }
+            $(".teacher_list").append(str);
+            line_color_change();
+            tableHoverEvent();
+            showPage(page, total_page)
+        });
+    }
+
+</script>
+</html>

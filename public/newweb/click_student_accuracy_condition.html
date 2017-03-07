@@ -1,0 +1,280 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.scrollbox.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>查看学生单题情况(正确率详情)</title>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div id="left-navigation"></div>
+    <div id="mainbody" style="margin-bottom:200px">
+        <div class="mainbody_title_box">测试管理>查看测试>测试名称>正确率</div>
+        <div class='tab-container'>
+            <div class='panel-container'>
+                <P id="show_page">
+                    <span id="rank_now" style="color:#ee8844;font-size:36px;"></span>/
+                    <span id="rank_sum"></span>
+                </P>
+                <div id="show_solution">
+                    <ul id="question_analysis">
+                    </ul>
+                </div>
+                <div id="backward" class="circle_button" style="float:left; margin-top:-260px;">< </div>
+                <div id="forward" class="circle_button" style="float:right; margin-top:-260px;"> > </div>
+                <div id="show_count">
+                    <ul id="question_tatistics">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="foot"></div>
+</body>
+<script type="text/javascript">
+$("#header").load("header.html");
+    $("#left-navigation").load("left.html", function() {
+        $("ul.accordion>li:eq(2)").addClass('open').children().show().find('li:eq(0)').children().addClass('bcolor');
+    });
+$("#foot").load("footer.html");
+// 统计数据 滚动
+$('#show_count').scrollbox({
+    distance: 'auto',
+    autoPlay: false,
+    speed: 16,
+});
+// 题目详解滚动
+$('#show_solution').scrollbox({
+    distance: 'auto',
+    autoPlay: false,
+    speed: 16,
+});
+
+// 点击左右按钮 题库滚动 并且题数变动
+$('#backward').click(function() {
+    $('#show_solution').trigger('backward');
+    $('#show_count').trigger('backward');
+    var s = $("#rank_sum").text();
+    var sum = parseInt(s);
+    var n = $("#rank_now").text();
+    var num = parseInt(n) - 1;
+    if (num == 0) {
+        $("#rank_now").text(sum);
+    } else {
+        $("#rank_now").text(num);
+    }
+});
+$('#forward').click(function() {
+    $('#show_solution').trigger('forward');
+    $('#show_count').trigger('forward');
+    var s = $("#rank_sum").text();
+    var sum = parseInt(s) + 1; //判断是否为总数加一
+    var n = $("#rank_now").text();
+    var num = parseInt(n) + 1;
+    if (num == sum) {
+        $("#rank_now").text(1);
+    } else {
+        $("#rank_now").text(num);
+    }
+});
+
+
+/*-----------------js获取GET参数--------------------*/
+function getPar(par) {
+    //获取当前URL
+    var local_url = document.location.href;
+    //获取要取得的get参数位置
+    var get = local_url.indexOf(par + "=");
+    if (get == -1) {
+        return false;
+    }
+    //截取字符串
+    var get_par = local_url.slice(par.length + get + 1);
+    //判断截取后的字符串是否还有其他get参数
+    var nextPar = get_par.indexOf("&");
+    if (nextPar != -1) {
+        get_par = get_par.slice(0, nextPar);
+    }
+    return get_par;
+}
+/*-------------------------------------------------------*/
+var testid = getPar('testid');
+var quesid = getPar('quesid');
+var uid = getPar('uid');
+var arr = get_queslist_ajax(testid, uid);
+var arrChoose = arr.arr_choose;
+var arrQC = arr.arr_qc;
+show_question_analysis(arr.arr_que, quesid, testid);
+
+
+
+// 把题目和做题统计显示在框框中 
+function show_question_analysis(arr, qid, tid) {
+    $("#rank_sum").empty().text(arr.length);
+    $("#question_tatistics").empty();
+    for (var i in arr) {
+        if (arr[i] == qid) {
+            var num = parseInt(i) + 1;
+            $("#rank_now").empty().text(num);
+            getqueData_ajax(arr[i]);
+            for (var j = num; j < arr.length; j++) {
+                getqueData_ajax(arr[j]);
+            }
+            for (var k = 0; k < i; k++) {
+                getqueData_ajax(arr[k]);
+            }
+        }
+    }
+    var node = $(".li_test");
+    node.each(function(index, el) {
+        var quesId = $(this).attr('que-id');
+        getstaticData_ajax(quesId, tid);
+    });
+
+}
+// 获取题目
+function getqueData_ajax(qid) {
+    $.ajax({
+        url: '/pubblico/getQuestion',
+        type: 'POST',
+        dataType: 'json',
+        async: false,
+        data: {
+            question_id_str: qid
+        },
+        success: function(json) {
+            data = json.Data[0];
+            var label_str = '';
+            var str = '';
+            for (var i in data.label) {
+                label_str += "<div class='capsule'>" + data.label[i] + "</div>";
+            }
+            //判断是否为材料题
+            if (data.question_materia_detail) {
+                str += "<li class='li_test' que-id='" + qid + "'>" + label_str + "<p>" + data.question_materia_detail + "</p><p>" + data.question_detail + "</p><p class='c_order' org-id='" + data.choose[0]['original_order'] + "'>A. " + data.choose[0]['detail'] + "</p><p class='c_order' org-id='" + data.choose[1]['original_order'] + "'>B. " + data.choose[1]['detail'] + "</p><p class='c_order' org-id='" + data.choose[2]['original_order'] + "'>C. " + data.choose[2]['detail'] + "</p><p class='c_order' org-id='" + data.choose[3]['original_order'] + "'>D. " + data.choose[3]['detail'] + "</p><p>" + data.question_analysis + "</p></li>";
+            } else {
+                str += "<li class='li_test' que-id='" + qid + "'>" + label_str + "<p>" + data.question_detail + "</p><p class='c_order' org-id='" + data.choose[0]['original_order'] + "'>A. " + data.choose[0]['detail'] + "</p><p class='c_order' org-id='" + data.choose[1]['original_order'] + "'>B. " + data.choose[1]['detail'] + "</p><p class='c_order' org-id='" + data.choose[2]['original_order'] + "'>C. " + data.choose[2]['detail'] + "</p><p class='c_order' org-id='" + data.choose[3]['original_order'] + "'>D. " + data.choose[3]['detail'] + "</p><p>" + data.question_analysis + "</p></li>";
+            }
+            $("#question_analysis").append(str);
+        }
+    });
+}
+
+// 获取做题统计信息
+function getstaticData_ajax(quesid, testid) {
+    $.ajax({
+        url: '/test_detail/getGroupQuestionStatisticsDetail',
+        type: 'POST',
+        dataType: 'json',
+        async: false,
+        data: {
+            test_id: testid,
+            question_id: quesid
+        },
+        success: function(json) {
+            var data = json.Data;
+            var cho = json.Data.choose_detail;
+            var accuracy;
+            if (parseInt(data.total_num) == 0) {
+                accuracy = 0;
+            } else {
+                accuracy = parseInt(data.did_right_num) / parseInt(data.total_num) * 100;
+            }
+            str = '';
+            var choose = $("li[que-id='" + quesid + "']").find('.c_order');
+            str += "<li qid='" + quesid + "'><p style='font-size:14px;'>答案统计<span class='student_choose'><span></p>";
+            choose.each(function(index, el) {
+                var code = $(this).attr("org-id");
+                if (code == 0) {
+                    if (index == 0) {
+                        str += "<p>正确答案是 <span style='font-size:24px;color:#469e4b;'>A</span></p>"
+                    }
+                    if (index == 1) {
+                        str += "<p>正确答案是 <span style='font-size:24px;color:#469e4b;'>B</span></p>"
+                    }
+                    if (index == 2) {
+                        str += "<p>正确答案是 <span style='font-size:24px;color:#469e4b;'>C</span></p>"
+                    }
+                    if (index == 3) {
+                        str += "<p>正确答案是 <span style='font-size:24px;color:#469e4b;'>D</span></p>"
+                    }
+                }
+            });
+            choose.each(function(index, el) {
+                var student_choose = arrQC[quesid];
+                var strkey;
+                if (index == 0) {
+                    strkey = "A";
+                }
+                if (index == 1) {
+                    strkey = "B";
+                }
+                if (index == 2) {
+                    strkey = "C";
+                }
+                if (index == 3) {
+                    strkey = "D";
+                }
+                var code = $(this).attr("org-id");
+                if (code == student_choose) {
+                    str += "<p>学生选择的答案是：" + strkey + "</p>";
+                }
+            });
+            if (arrQC[quesid] == 4) {
+                str += "<p>学生未选择</p>";
+            }
+            str += "</li>";
+            $("#question_tatistics").append(str);
+        }
+
+    });
+}
+
+// 学生选择的答案
+// function get_student_choose(arr){
+//     for()
+// }
+
+// 获取三级知识点id和名称 题目id 
+function get_queslist_ajax(testid, uid) {
+    var arrMune = new Array();
+    var arrName = new Array();
+    var arrQues = new Array();
+    var arrChoose = new Array();
+    var arrqc = new Array();
+    $.ajax({
+        url: '/test_detail/getStudentQuestionStatistics',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            test_id: testid,
+            user_id: uid
+        },
+        async: false,
+        success: function(json) {
+            var data = json.Data;
+            for (var i in data) {
+                arrMune[i] = data[i].menu_id;
+                arrName[i] = data[i].menu_name;
+                arrQues[i] = data[i].question_id;
+                arrChoose[i] = data[i].choose;
+                arrqc[data[i].question_id] = data[i].choose;
+            }
+        }
+    });
+    return {
+        'arr_menu': arrMune,
+        'arr_name': arrName,
+        'arr_que': arrQues,
+        'arr_choose': arrChoose,
+        'arr_qc': arrqc
+    };
+}
+</script>
+
+</html>

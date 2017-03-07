@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.circliful.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <script src="plugin/tab_plugin/jquery.hashchange.min.js" type="text/javascript"></script>
+    <script src="plugin/tab_plugin/jquery.easytabs.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>测试管理>查看测试>查看学生学习情况</title>
+    <style type="text/css">
+  /*重置百分比圆环的css*/
+    .circliful {
+        position: relative;
+        display: inline-block;
+        margin: 20px;
+        color: #717171;
+        cursor: pointer;
+    }
+    
+    .circliful:hover {
+        border-radius: 90px;
+        background-color: #DDDDDD;
+    }
+
+    /*圈内大文字的颜色*/
+    .circle-info,
+    .circle-info-half {
+        color: #999;
+        top: 41px;
+        /*到百分之的距离*/
+        height: 10px;
+        line-height: 10px;
+    }
+    /*圈内小文字的颜色*/
+    
+    .circliful .fa {
+        margin: -10px 3px 0 3px;
+        position: relative;
+        bottom: 4px;
+    }
+    /*百分比圆环图样式*/
+
+    </style>
+</head>
+
+<body>
+   <div id="header"></div>
+    <div id="left-navigation"></div>
+    <div id="mainbody">
+        <div class="mainbody_title_box">查看测试>查看学生详细学习情况</div>
+        <div class="mainbody_top">
+            <span>当前考核对象：</span><span class="student-name"></span>
+        </div>
+
+        <div id="tab-container" class='tab-container'>
+                <ul class='etabs'>
+                    <li class='tab active'><a href="#tab-studentcondition">学习情况</a></li>
+                </ul>
+                <div class='panel-container'>
+                    <div id="tab-studentcondition">
+                        <p class="font_color_black font_size_14" style="margin:-38px 0 15px 0;">成绩：</p>
+                        <div>
+                            <div class="score_block block_bcolor_red text_center">
+                                <p class="font_size_18 distance">学生总答题量</p>
+                                <p>
+                                    <span id="did_question_num" class="font_size_38"></span>
+                                    <span class="font_size_18">道</span>
+                                </p>
+                            </div>
+                            <div class="score_block block_bcolor_green text_center">
+                                <p class="font_size_18 distance">本次测试正确率</p>
+                                <p>
+                                    <span id="accuracy" class="font_size_38"></span>
+                                    <span class="font_size_18">%</span>
+                                </p>
+                            </div>
+                            <div class="score_block block_bcolor_blue text_center">
+                                <p class="font_size_18 distance">本次测试用时</p>
+                                <p>
+                                    <span id="averTimeM" class="font_size_38"></span>
+                                    <span class="font_size_18">分</span>
+                                    <span id="averTimeS" class="font_size_38"></span>
+                                    <span class="font_size_18">秒</span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <p class="font_color_black font_size_14" style="margin:48px 0 0 0;">题目正确率：</p>
+                        <div class="" id="allnode"></div>
+
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div id="foot"></div>
+</body>
+<script type="text/javascript">
+$("#header").load("header.html");
+    $("#left-navigation").load("left.html", function() {
+        $("ul.accordion>li:eq(2)").addClass('open').children().show().find('li:eq(0)').children().addClass('bcolor');
+    });
+    $("#foot").load("footer.html");
+/*-----------------js获取GET参数--------------------*/
+function getPar(par) {
+    //获取当前URL
+    var local_url = document.location.href;
+    //获取要取得的get参数位置
+    var get = local_url.indexOf(par + "=");
+    if (get == -1) {
+        return false;
+    }
+    //截取字符串
+    var get_par = local_url.slice(par.length + get + 1);
+    //判断截取后的字符串是否还有其他get参数
+    var nextPar = get_par.indexOf("&");
+    if (nextPar != -1) {
+        get_par = get_par.slice(0, nextPar);
+    }
+    return get_par;
+}
+/*-------------------------------------------------------*/
+var testid = getPar('testid');
+var uid=getPar('userid');
+var studentname=decodeURI(getPar('studentname'));
+var groupid = '';
+set_user_name(studentname);
+get_groupid_ajax(testid);
+get_group_testcondition(testid,uid);
+get_groupAccuracy_ajax(testid,uid);
+function set_user_name(){
+    $('.student-name').append(studentname);
+}
+//获取groupid 
+function get_groupid_ajax(testid) {
+    $.ajax({
+        url: '/test_detail/getTestGroup',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            test_id: testid
+        },
+        success: function(json) {
+            groupid += json.Data[0].group_id;
+        }
+    });
+}
+
+// 获取学习组测试情况
+function get_group_testcondition(testid,uid) {
+    $.ajax({
+        url: '/test_detail/getStudentStatistics',
+        type: 'POST',
+        dataType: 'json',
+        data: {test_id: testid,user_id:uid},
+        success: function(json) {
+            var data = json.Data;
+            var didQueN = data.did_question_num; //做题数 不包括未选择
+            var didQueRN = data.did_question_right_num; //答对题量
+            var totalQueN = data.total_question_num; //总体量 包括未选择
+            var totalUseT = parseInt(data.total_use_time); //总用时
+            var accuracy; //正确率
+            var aver_TimeM = parseInt((totalUseT) / 60); //平均时间 分钟
+            var aver_TimeS = parseInt(totalUseT) % 60; //平均时间 秒
+            if (totalQueN == 0) {
+                accuracy = 0;
+            } else {
+                accuracy = parseInt(didQueRN) / parseInt(totalQueN)*100;
+            }
+            $("#did_question_num").text(parseInt(didQueN).toFixed(0));
+            $("#accuracy").text(parseInt(accuracy).toFixed(1));
+            $("#averTimeM").text(parseInt(aver_TimeM).toFixed(0));
+            $("#averTimeS").text(parseInt(aver_TimeS).toFixed(0));
+        }
+    });
+}
+
+// 获取学习组题目正确率
+function get_groupAccuracy_ajax(testid,uid) {
+    $.ajax({
+        url: '/test_detail/getStudentQuestionStatistics',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            test_id: testid,
+            user_id:uid
+        },
+        success: function(json) {
+            var data = json.Data;
+            var str = '';
+            for (var i in data) {
+                var k = 1 + parseInt(i);
+                var chose=data[i].choose;
+                if(chose==0){
+                    str += "<div class='circliful_list' id='myStat3' u-id='"+uid+"' test-id='" + testid + "' que-id='" + data[i].question_id + "' data-dimension='90' data-text='正确' data-info='" + k + ":" + data[i].menu_name + "' data-width='10' data-fontsize='16' data-percent='100' data-fgcolor='#39993e' data-bgcolor='#eee' data-fill='#FFF'></div>";
+                }
+                if(chose==1 || chose==2 || chose==3){
+                    str += "<div class='circliful_list' id='myStat3' u-id='"+uid+"' test-id='" + testid + "' que-id='" + data[i].question_id + "' data-dimension='90' data-text='答错' data-info='" + k + ":" + data[i].menu_name + "' data-width='10' data-fontsize='16' data-percent='100' data-fgcolor='#cf7d69' data-bgcolor='#eee' data-fill='#FFF'></div>";
+                }
+                if(chose==4){
+                    str += "<div class='circliful_list' id='myStat3' u-id='"+uid+"' test-id='" + testid + "' que-id='" + data[i].question_id + "' data-dimension='90' data-text='未答题' data-info='" + k + ":" + data[i].menu_name + "' data-width='10' data-fontsize='16' data-percent='100' data-fgcolor='#61a9dc' data-bgcolor='#eee' data-fill='#FFF'></div>";
+                }
+               
+            }
+            $("#allnode").append(str);
+            active_percent();
+        }
+    });
+}
+
+// 给百分比按钮添加点击事件
+function active_percent() {
+    var AllNode = $("#allnode div");
+    AllNode.each(function(index) {
+        $(this).attr('id', 'sty' + index).circliful();
+        $(this).click(function() {
+            location.href = "click_student_accuracy_condition.html?testid=" + $(this).attr('test-id') + "&quesid=" + $(this).attr("que-id")+"&uid="+$(this).attr("u-id");
+        });
+    });
+}
+
+</script>
+
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>账户管理</title>
+</head>
+
+<body>
+ <div id="header"></div>
+<div id="left-navigation"></div>
+<div id="mainbody">
+    <div class="mainbody_title_box">账户管理</div>
+    <div class="mainbody_bottom">
+        <div class='tab-container'>
+            <div class='panel-container'>
+                <a href="account_admin_addaccount.html" class="orange_btn float_right"
+                   style="margin-top: -58px;">新增教师账户</a>
+
+                <div style="margin-bottom:13px; color:#787878; font-size:14px; ">
+                    <span>真实姓名：</span>
+                    <input type="text" class="cap_input_small border_color_black" name="filter"/>
+
+                    <span>状态：</span>
+                    <select id="select_name" class="cap_select" name="status">
+                        <option value="">请选择</option>
+                        <option value="1">启用</option>
+                        <option value="2">禁用</option>
+                    </select>
+                    <span class="set_system">所属层级：</span>
+                    <!--<div id="select" style="display:inline-block">-->
+                       <!-- -->
+                        <!--<select name="category_1" id="category_1" class="system cap_select" onChange="change('category_1');">-->
+                            <!--<option value="">请选择</option>-->
+
+                        <!--</select>-->
+                    <!--</div>-->
+                    <button class="cap_orange_btn search" type="button">查询</button>
+                </div>
+                <table class="gridtable manager_list" style="border-radius: 5px;">
+                    <tr class="fontsize_14 bg_gray">
+                        <td>真实姓名</td>
+                        <td>所在层级</td>
+                        <td>联系电话</td>
+                        <td>邮箱</td>
+                        <td>状态</td>
+                        <td>操作</td>
+                    </tr>
+                    <!--                             <tr class="fontsize_14">
+                                                    <td>王二毛</td>
+                                                    <td><p>传媒学院</p></td>
+                                                    <td>13210487654</td>
+                                                    <td>12345678@sina.com</td>
+                                                    <td>启用</td>
+                                                    <td>
+                                                        <a href="account_admin_modifyaccount.html" class="operate font_color_yellow">编辑</a>
+                                                        <a href="#" class="operate font_color_orange">禁用</a>
+                                                        <a href="#" class="operate font_color_red">删除</a>
+                                                    </td>
+                                                </tr> -->
+
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="mainbody_white_box show_pages" style="text-align:center">
+        <!--                 <a href="" class="pages">首页</a>
+                        <a href="" class="pages">上一页</a>
+                        <a href="" class="pages">1</a>
+                        <a href="" class="pages pagescur">2</a>
+                        <a href="" class="pages">3</a>
+                        <a href="" class="pages">下一页></a>
+                        <a href="" class="pages">尾页</a> -->
+    </div>
+</div>
+
+<div id="foot"></div>
+
+</body>
+<script type="text/javascript">
+  $("#header").load("header.html");
+    $("#left-navigation").load("left.html", function() {
+        $("ul.accordion>li:eq(7)").addClass('open');
+    });
+    $("#foot").load("footer.html");
+
+    line_color_change();
+    //表格列的颜色 交替显示
+    function line_color_change() {
+        var obj = $("tr");
+        obj.each(function (index, el) {
+            if (parseInt(index) % 2 != 0) {
+                $(this).addClass('bg_white');
+            }
+        });
+    }
+    tableHoverEvent();
+        // 列表 hover事件
+function tableHoverEvent(){
+    $("tr").hover(function() {
+        $(this).addClass('bg_gray');
+    }, function() {
+        $(this).removeClass('bg_gray');
+    });
+}
+
+    $(function () {
+        getManagerList(1, '', '', 0);
+        searchManager();
+        setSystem('.set_system',1);
+    });
+
+    function searchPageManager(page) {
+        var system = '';
+        if ($('#category_1').val()) {
+            system += ',';
+            for (var i = 1; i <= $('.system_1').length; i++) {
+                if ($('#category_' + i).val()) {
+                    system += $('#category_' + i).val() + ',';
+                }
+            }
+            ;
+        }
+        var filter = $("input[name='filter']").val();
+        var status = $("select[name='status']").val();
+        $('.manager_tr').empty();
+        getManagerList(page, filter, system, status);
+    }
+
+    function searchManager() {
+        $('.search').click(function () {
+            searchPageManager(1);
+        });
+    }
+
+    function getManagerList(pages, filter, system, status) {
+        ajaxPost('/curd_manager/getManagerList', {
+            page: pages,
+            filter: filter,
+            system: system,
+            status: status
+        }, function (Data) {
+            var data = Data.manager;
+            var page = Data.page;
+            var total_page = Data.total_page;
+            var str = '';
+            for (var i in data) {
+                var system_name = '';
+                for (var j in data[i].system_name) {
+                    system_name += '<p>' + data[i].system_name[j] + '<p>';
+                }
+                str += '<tr class="fontsize_14 manager_tr" s_m_id=' + data[i].s_m_id + '><td>' + data[i].s_m_realname + '</td><td>' + system_name + '</td><td>' + data[i].s_m_telephone + '</td><td>' + data[i].s_m_email + '</td><td>' + (data[i].s_m_status == 1 ? '启用' : '禁用') + '</td><td><a href="account_admin_modifyaccount.html?s_m_id=' + data[i].s_m_id + '" class="operate font_color_yellow">编辑</a> <a class="operate show_cursor ' + (data[i].s_m_status == 1 ? 'font_color_orange">禁用' : 'font_color_green">启用') + '</a> <a class="operate show_cursor font_color_red">删除</a></td></tr>';
+            }
+            $(".manager_list").append(str);
+            line_color_change();
+            tableHoverEvent();
+            showPage(page, total_page)
+        });
+    }
+
+    $(document).on('click', '.font_color_orange', function () {
+        var s_m_id = $(this).parent().parent().attr('s_m_id');
+        var mythis = $(this);
+        ajaxPost('/curd_manager/modifyManagerStatus', {s_m_id: s_m_id}, function (Data) {
+            if (Data.flag == 1) {
+                mythis.removeClass('font_color_orange').addClass('font_color_green');
+                mythis.text('启用');
+                mythis.parent().prev().text('禁用');
+            }
+        });
+
+    });
+
+    $(document).on('click', '.font_color_green', function () {
+        var s_m_id = $(this).parent().parent().attr('s_m_id');
+        var mythis = $(this);
+        ajaxPost('/curd_manager/modifyManagerStatus', {s_m_id: s_m_id}, function (Data) {
+            if (Data.flag == 1) {
+                mythis.removeClass('font_color_green').addClass('font_color_orange');
+                mythis.text('禁用');
+                mythis.parent().prev().text('启用');
+            }
+        });
+
+    });
+
+    $(document).on('click', '.font_color_red', function () {
+        var s_m_id = $(this).parent().parent().attr('s_m_id');
+        var mythis = $(this);
+        if(confirm("删除该账号后其数据将不存在，确定要删除吗？")){
+            ajaxPost('/curd_manager/delManager', {s_m_id: s_m_id}, function (Data) {
+                if (Data.flag == 1) {
+                    mythis.removeClass('font_color_red').addClass('font_color_black');
+                    mythis.text('已删除');
+                    mythis.parent().prev().text('已删除');
+                }
+            });
+        }
+    });
+
+
+    //添加分页按钮点击事件
+    function page_click() {
+        $(".pages").click(function () {
+            var page = $(this).attr("page-id");
+            searchPageManager(page);
+        });
+    }
+
+
+</script>
+</html>

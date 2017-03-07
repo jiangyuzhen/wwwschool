@@ -1,0 +1,301 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>班级管理>验证管理</title>
+</head>
+
+<body>
+
+<div id="header"></div>
+<div id="left-navigation"></div>
+<div id="mainbody">
+    <div class="mainbody_title_box">班级管理>验证管理</div>
+    <div class="mainbody_bottom" style="border:none">
+        <div class='tab-container'>
+            <div class='panel-container'>
+                <div style="margin-top:-50px; margin-bottom:13px; color:#787878; font-size:14px; ">
+                    <span>真实姓名：</span>
+                    <input type="text" name="name" />
+                    <span>学籍号：</span>
+                    <input type="text" name="sno" />
+                    <span>状态：</span>
+                    <select id="select_level" class="cap_select" name="status">
+                        <option value="">请选择</option>
+                        <option value="2">未验证</option>
+                        <option value="1">已验证</option>
+                    </select>
+                    <button class="cap_orange_btn search" type="button">查询</button>
+                </div>
+                <table class="gridtable class_user_list" style="border-radius: 5px;">
+                    <tr class="fontsize_14 bg_gray">
+                        <td>考核对象</td>
+                        <td>学籍号</td>
+                        <td>状态</td>
+                        <td>操作</td>
+                    </tr>
+                    <!--                             <tr class="fontsize_14">
+                                                    <td>王二毛</td>
+                                                    <td>传媒学院</td>
+                                                    <td>201502031122</td>
+                                                    <td><span>10</span>分<span>20</span>秒</td>
+                                                    <td><span>80</span>题</td>
+                                                    <td ><span class="font_color_red">46</span><span class="font_color_red">%</span></td>
+                                                    <td><span>6</span>秒</td>
+                                                    <td><a href="#" class="operate font_color_green">通过验证</a></td>
+                                                </tr>
+                                                <tr class="fontsize_14">
+                                                    <td>王二毛</td>
+                                                    <td>传媒学院</td>
+                                                    <td>201502031122</td>
+                                                    <td>——</td>
+                                                    <td>——</td>
+                                                    <td>——</td>
+                                                    <td>——</td>
+                                                    <td><a href="#" class="operate font_color_green">通过验证</a></td>
+                                                </tr>
+                                                <tr class="fontsize_14">
+                                                    <td>王二毛</td>
+                                                    <td>传媒学院</td>
+                                                    <td>201502031122</td>
+                                                    <td>——</td>
+                                                    <td>——</td>
+                                                    <td>——</td>
+                                                    <td>——</td>
+                                                    <td><a href="#" class="operate font_color_green">通过验证</a></td>
+                                                </tr>
+                                                <tr class="fontsize_14">
+                                                    <td>王二毛</td>
+                                                    <td>传媒学院</td>
+                                                    <td>201502031122</td>
+                                                    <td><span>10</span>分<span>20</span>秒</td>
+                                                    <td><span>80</span>题</td>
+                                                    <td ><span class="font_color_green">80</span><span class="font_color_green">%</span></td>
+                                                    <td><span>6</span>秒</td>
+                                                    <td><a href="#" class="operate font_color_green">通过验证</a></td>
+                                                </tr>
+                                                <tr class="fontsize_14">
+                                                    <td>王二毛</td>
+                                                    <td>传媒学院</td>
+                                                    <td>201502031122</td>
+                                                    <td><span>10</span>分<span>20</span>秒</td>
+                                                    <td><span>80</span>题</td>
+                                                    <td ><span class="font_color_red">46</span><span class="font_color_red">%</span></td>
+                                                    <td><span>6</span>秒</td>
+                                                    <td><a href="#" class="operate font_color_green">通过验证</a></td>
+                                                </tr>
+                                                <tr class="fontsize_14">
+                                                    <td>王二毛</td>
+                                                    <td>传媒学院</td>
+                                                    <td>201502031122</td>
+                                                    <td><span>10</span>分<span>20</span>秒</td>
+                                                    <td><span>80</span>题</td>
+                                                    <td ><span class="font_color_red">46</span><span class="font_color_red">%</span></td>
+                                                    <td><span>6</span>秒</td>
+                                                    <td><a href="#" class="operate font_color_green">通过验证</a></td>
+                                                </tr>
+                                                <tr class="fontsize_14">
+                                                    <td>王二毛</td>
+                                                    <td>传媒学院</td>
+                                                    <td>201502031122</td>
+                                                    <td><span>10</span>分<span>20</span>秒</td>
+                                                    <td><span>80</span>题</td>
+                                                    <td ><span class="font_color_red">46</span><span class="font_color_red">%</span></td>
+                                                    <td><span>6</span>秒</td>
+                                                    <td><a href="#" class="operate font_color_green">通过验证</a></td>
+                                                </tr>
+                                                <tr class="fontsize_14">
+                                                    <td>王二毛</td>
+                                                    <td>传媒学院</td>
+                                                    <td>201502031122</td>
+                                                    <td><span>10</span>分<span>20</span>秒</td>
+                                                    <td><span>80</span>题</td>
+                                                    <td ><span class="font_color_red">46</span><span class="font_color_red">%</span></td>
+                                                    <td><span>6</span>秒</td>
+                                                    <td><a href="#" class="operate font_color_green">通过验证</a></td>
+                                                </tr>
+                                                <tr class="fontsize_14">
+                                                    <td>王二毛</td>
+                                                    <td>传媒学院</td>
+                                                    <td>201502031122</td>
+                                                    <td><span>10</span>分<span>20</span>秒</td>
+                                                    <td><span>80</span>题</td>
+                                                    <td ><span class="font_color_red">46</span><span class="font_color_red">%</span></td>
+                                                    <td><span>6</span>秒</td>
+                                                    <td><a href="#" class="operate font_color_green">通过验证</a></td>
+                                                </tr>
+                                                <tr class="fontsize_14">
+                                                    <td>王二毛</td>
+                                                    <td>传媒学院</td>
+                                                    <td>201502031122</td>
+                                                    <td><span>10</span>分<span>20</span>秒</td>
+                                                    <td><span>80</span>题</td>
+                                                    <td ><span class="font_color_red">46</span><span class="font_color_red">%</span></td>
+                                                    <td><span>6</span>秒</td>
+                                                    <td><a href="#" class="operate font_color_green">通过验证</a></td>
+                                                </tr>
+                                                <tr class="fontsize_14">
+                                                    <td>王二毛</td>
+                                                    <td>传媒学院</td>
+                                                    <td>201502031122</td>
+                                                    <td><span>10</span>分<span>20</span>秒</td>
+                                                    <td><span>80</span>题</td>
+                                                    <td ><span class="font_color_red">46</span><span class="font_color_red">%</span></td>
+                                                    <td><span>6</span>秒</td>
+                                                    <td><a href="#" class="operate font_color_green">通过验证</a></td>
+                                                </tr>
+                                                <tr class="fontsize_14">
+                                                    <td>王二毛</td>
+                                                    <td>传媒学院</td>
+                                                    <td>201502031122</td>
+                                                    <td><span>10</span>分<span>20</span>秒</td>
+                                                    <td><span>80</span>题</td>
+                                                    <td ><span class="font_color_red">46</span><span class="font_color_red">%</span></td>
+                                                    <td><span>6</span>秒</td>
+                                                    <td><a href="#" class="operate font_color_green">通过验证</a></td>
+                                                </tr>
+                                                <tr class="fontsize_14">
+                                                    <td>王二毛</td>
+                                                    <td>传媒学院</td>
+                                                    <td>201502031122</td>
+                                                    <td><span>10</span>分<span>20</span>秒</td>
+                                                    <td><span>80</span>题</td>
+                                                    <td ><span class="font_color_red">46</span><span class="font_color_red">%</span></td>
+                                                    <td><span>6</span>秒</td>
+                                                    <td><a href="#" class="operate font_color_green">通过验证</a></td>
+                                                </tr>
+                                                <tr class="fontsize_14">
+                                                    <td>王二毛</td>
+                                                    <td>传媒学院</td>
+                                                    <td>201502031122</td>
+                                                    <td><span>10</span>分<span>20</span>秒</td>
+                                                    <td><span>80</span>题</td>
+                                                    <td ><span class="font_color_red">46</span><span class="font_color_red">%</span></td>
+                                                    <td><span>6</span>秒</td>
+                                                    <td><a href="#" class="operate font_color_red">踢出班级</a></td>
+                                                </tr> -->
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="mainbody_white_box show_pages" style="text-align:center">
+        <!--                 <a href="" class="pages">首页</a>
+                        <a href="" class="pages"><上一页</a>
+                        <a href="" class="pages">1</a>
+                        <a href="" class="pages pagescur">2</a>
+                        <a href="" class="pages">3</a>
+                        <a href="" class="pages">下一页></a>
+                        <a href="" class="pages">尾页</a> -->
+    </div>
+</div>
+
+<div id="foot"></div>
+
+</body>
+<script type="text/javascript">
+$("#header").load("header.html");
+    $("#left-navigation").load("left.html", function() {
+        $("ul.accordion>li:eq(3)").addClass('open');
+    });
+    $("#foot").load("footer.html");
+
+    //表格列的颜色 交替显示
+    function line_color_change() {
+        var obj = $("tr");
+        obj.each(function(index, el) {
+            if (parseInt(index) % 2 != 0) {
+                $(this).addClass('bg_white');
+            }
+        });
+    }
+    // 列表 hover事件
+function tableHoverEvent(){
+    $("tr").hover(function() {
+        $(this).addClass('bg_gray');
+    }, function() {
+        $(this).removeClass('bg_gray');
+    });
+}
+
+
+    $(function () {
+        get_class_user_list(1,'','',0);
+        search_class_user();
+    });
+
+    function search_page_class_user(page){
+        var name=$("input[name='name']").val();
+        var sno=$("input[name='sno']").val();
+        var status=$("select[name='status']").val();
+        $('.user_list').empty();
+        get_class_user_list(page,name,sno,status);
+    }
+
+    function search_class_user(){
+        $('.search').click(function(){
+            search_page_class_user(1);
+        });
+    }
+
+
+    function get_class_user_list(pages,name,sno,status){
+        var s_y_f_id=getUrlParam('system');
+        ajaxPost('/manage_class/getClassUserList',{page:pages,s_y_f_id:s_y_f_id,name:name,sno:sno,status:status},function(Data){
+            var data=Data.user;
+            var page=Data.page;
+            var total_page=Data.total_page;
+            var str='';
+            for(var i in data){
+                str+='<tr class="fontsize_14 user_list" data-user_id='+data[i].user_id+'><td>'+data[i].user_realname+'</td><td>'+data[i].sno+'</td><td>'+(data[i].status!=1?'未验证':'已验证')+'</td><td>'+(data[i].status!=1?'<a class="operate show_cursor font_color_green">通过验证<a/><a class="operate show_cursor font_color_red">踢出班级</a>':'<a class="operate show_cursor font_color_red">踢出班级</a>')+'</td></tr>';
+            }
+            $(".class_user_list").append(str);
+            line_color_change();
+            tableHoverEvent();
+            showPage(page,total_page)
+        });
+    }
+
+    $(document).on('click','.font_color_red',function(){
+        var s_y_f_id=getUrlParam('system');
+        var user_id=$(this).parent().parent().data('user_id');
+        var mythis=$(this);
+        ajaxPost('/manage_class/modifyUserClass',{user_id:user_id,s_y_f_id:s_y_f_id,status:0},function(Data){
+            if(Data.flag==1){
+                mythis.removeClass('font_color_red').addClass('font_color_yellow');
+                mythis.text('已踢出');
+                mythis.parent().prev().text('已踢出');
+            }
+        });
+
+    });
+
+    $(document).on('click','.font_color_green',function(){
+        var s_y_f_id=getUrlParam('system');
+        var user_id=$(this).parent().parent().data('user_id');
+        var mythis=$(this);
+        ajaxPost('/manage_class/modifyUserClass',{user_id:user_id,s_y_f_id:s_y_f_id,status:1},function(Data){
+            if(Data.flag==1){
+                mythis.removeClass('font_color_green').addClass('font_color_red');
+                mythis.text('踢出班级');
+                mythis.parent().prev().text('已验证');
+            }
+        });
+
+    });
+
+    //添加分页按钮点击事件
+    function page_click(){
+        $(".pages").click(function() {
+            var page=$(this).attr("page-id");
+            search_page_class_user(page);
+        });
+    }
+
+</script>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>测试管理>分组管理</title>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div id="left-navigation"></div>
+    <div id="mainbody">
+        <div class="mainbody_title_box">测试管理>分组管理</div>
+        <div class="mainbody_white_box" style="margin-bottom: -1px;">
+            <span>
+            <button class="stepbutton">
+                <i class="fa fa-user cur_orange"></i>
+                <span>选择分组</span>
+            </button>
+            <hr />
+            <button id="strp_img_first" class="stepbutton" disabled="disabled">
+                <i class="fa fa-edit (alias) block_bcolor_black"></i>
+                <span>给测试取名</span>
+            </button>
+            <hr />
+            <button id="strp_img_second" class="stepbutton" disabled="disabled">
+                <i class="fa fa-database block_bcolor_black"></i>
+                <span>开始组卷</span>
+            </button>
+            <hr />
+            <button id="strp_img_third" class="stepbutton" disabled="disabled">
+                <i class="fa fa-search-plus block_bcolor_black"></i>
+                <span>试卷预览</span>
+            </button>
+            <hr />
+            <button id="strp_img_fourth" class="stepbutton" disabled="disabled">
+                <i class="fa fa-send block_bcolor_black"></i>
+                <span>发布试卷</span>
+            </button>
+            </span>
+        </div>
+        <div class="mainbody_bottom" style="border:none">
+            <div class='tab-container'>
+                <div  class='panel-container'>
+                    <div id="groups">
+                        <!-- <a href="test_admin_grouping_checkgroup.html" class="span_block block_bcolor_gray border_color_e">
+                                <p class="text_right font_color_f font_size_38"><i class="fa  fa-close (alias) close"></i></p>
+                                <p class="group_block_tittle">一班全体学生</p>
+                                <p class="font_size_55 font_color_yellow">
+                                    <i class="fa fa-user"></i><span class="font_size_18">（<span>56</span>人）</span>
+                                </p>
+                        </a>-->
+                    </div>
+                    <p class="text_center">
+                        <a id="a_toassemble" href="#"  class="square_orange_btn font_size_18" style="margin-top:48px;">下一步</a>
+                    </p>
+                </div>
+            </div>
+            </div>
+        </div>
+
+    <div id="foot"></div>
+</body>
+<script type="text/javascript">
+
+
+$(function(){
+    $("#header").load("header.html");
+    $("#left-navigation").load("left.html", function() {
+        $("ul.accordion>li:eq(2)").addClass('open').children().show().find('li:eq(1)').children().addClass('bcolor');
+    });
+    $("#foot").load("footer.html");
+    getGroup();
+    toAssembleClick();
+});
+
+
+// 获取学习组
+function getGroup(){
+    ajaxPost('/group/getGroup','',function(data){
+        var str='';
+        for(var i in data){
+            str+="<div class='span_block block_bcolor_gray border_color_e show_cursor' group-id='"+data[i].group_id+"'><p style='margin-top: 30px;' class='group_block_tittle'>"+data[i].group_name+"</p><p class='font_size_55 font_color_yellow'><i class='fa fa-users'></i><span class='font_size_18'>（<span>"+data[i].group_user_num+"</span>人）</span></p></div>"
+        }
+        $("#groups").empty().append(str);
+        addChooseGroupEvent();
+    });
+}
+
+
+
+// 添加删除点击事件 和 点击查看分组详情事件
+function addChooseGroupEvent(){
+    $(".border_color_e").click(function(event) {
+         $(".border_color_e i.fa-check-circle-o").remove();
+          var str="<i class='fa  fa-check-circle-o font_color_green append_check_circle' style='font-size:86px;'></i>";
+          $(this).append(str);
+    });
+}
+function toAssembleClick(){
+        $("#a_toassemble").click(function(event) {
+            var gid=$("i.fa-check-circle-o").parent().attr("group-id");
+            if(typeof(gid) == "undefined"){
+                    alert("请选择分组");
+            }else{
+                $(this).prop('href', 'assemble_exam.html?groupid='+gid);
+            }
+            
+        });
+}
+</script>
+</html>

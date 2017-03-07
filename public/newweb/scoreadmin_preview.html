@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <script src="plugin/tab_plugin/jquery.hashchange.min.js" type="text/javascript"></script>
+    <script src="plugin/tab_plugin/jquery.easytabs.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="echarts/build/dist/echarts.js"></script>
+    <script type="text/javascript" src="js/echarts.common.js"></script>
+    <title>成绩管理>成绩总览</title>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div id="left-navigation"></div>
+    <div id="mainbody">
+        <div class="mainbody_title_box">成绩总览</div>
+        <!-- <div class="mainbody_top">
+            <span>当前考核对象：</span><span>一班</span>
+        </div> -->
+        <div class="mainbody_bottom" style="border:none">
+            <div id="tab-container" class='tab-container'>
+                <ul class='etabs'>
+                    <li class='tab active'><a href="#scoreadmin_preview_div1">综合总览</a></li>
+                    <li class='tab'><a href="#scoreadmin_preview_div2">知识点掌握列表</a></li>
+                    <li class='tab'><a href="#scoreadmin_preview_div3">知识点发展趋势图</a></li>
+                    <li class='tab'><a href="#scoreadmin_preview_div4">知识点掌握地图</a></li>
+                </ul>
+                <div class='panel-container'>
+                    <div id="scoreadmin_preview_div1"></div>
+                    <div id="scoreadmin_preview_div2"></div>
+                    <div id="scoreadmin_preview_div3"></div>
+                    <div id="scoreadmin_preview_div4"></div>
+                </div>
+            </div>
+        </div> 
+    </div>      
+    <div id="foot"></div>
+</body>
+<script type="text/javascript">
+$(function(){
+    $("#header").load("header.html");
+    $("#left-navigation").load("left.html", function () {
+        $("ul.accordion>li:eq(1)").addClass('open').children().show().find('li:eq(0)').children().addClass('bcolor');
+    });
+    $("#scoreadmin_preview_div1").load("scoreadmin_preview_div1.html");
+    $("#scoreadmin_preview_div2").load("scoreadmin_preview_div2.html");
+    $("#scoreadmin_preview_div3").load("scoreadmin_preview_div3.html");
+    $("#scoreadmin_preview_div4").load("scoreadmin_preview_div4.html");
+    $("#foot").load("footer.html");
+    tabClickEvent();
+});
+
+function tabClickEvent(){
+    $("#scoreadmin_preview_div2").hide();
+    $("#scoreadmin_preview_div3").hide();
+    $("#scoreadmin_preview_div4").hide();
+    $("ul.etabs>li").click(function(event) {
+        $("ul.etabs>li").removeClass('active');
+        $(this).addClass('active');
+        $("ul.etabs>li").each(function(index, el) {
+            var num=index + 1;
+            if ($(this).hasClass('active')) {
+                $("#scoreadmin_preview_div"+num).show();
+            } else{
+                $("#scoreadmin_preview_div"+num).hide();
+            }
+        });
+
+    });
+    $('ul.etabs>li:eq(2)').click(function(){
+        $("#scoreadmin_preview_div3").show();
+        $('.search-point-trend-data-button').trigger('click');
+    });
+}
+
+
+</script>
+
+</html>

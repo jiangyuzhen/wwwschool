@@ -1,0 +1,503 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="js/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>体系建设</title>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div id="left-navigation"></div>
+    <div id="mainbody">
+        <div class="mainbody_title_box">体系建设</div>
+        <div class="mainbody_bottom">
+            <div class='tab-container'>
+                <div class='panel-container'>
+                    <p class="text_right" style="margin-top:-28px;">
+                        <button style="padding: 10px 15px;margin-bottom:20px;" class="square_orange_btn font_size_18" type="button" id="add_level">扩大组织结构
+                        </button>
+                        <input type="text" class="last_parient_id" hidden/>
+                    </p>
+                    <div class="system-construction">
+                        <!--    <div class="systemrow">
+                        <p class="orange_block" >
+                            <span class="system_name">学校</span>
+                            <i class="fa fa-close fr_c_s rule-del show_cursor"></i>
+                            <i class="fa fa-pencil fr_c_s rule-edit show_cursor"></i>
+                        </p>
+                        <div class="white_block text_center show_cursor">
+                            <p class="ch_op">
+                                <i class="fa fa-plus"></i>
+                                <i class="fa fa-pencil"></i>
+                                <i class="fa fa-user"></i>
+                                <i class="fa fa-close"></i>
+                            </p>
+                            <p class="font_color_black font_size_24">行测</p>
+                            <p class="font_color_black font_size_14" style="margin:8px 0; ">负责人：zjh</p>
+                        </div>
+                    </div> -->
+                    </div>
+                    <button class="frist_form_add orange_btn" type="button">添加更多组织</button>
+                </div>
+            </div>
+              <div id="mask" class="mask"></div> 
+        </div>
+    </div>
+    <div id="foot"></div>
+</body>
+<script type="text/javascript">
+$("#header").load("header.html");
+$("#left-navigation").load("left.html", function() {
+    $("ul.accordion>li:eq(6)").addClass('open');
+});
+$("#foot").load("footer.html");
+$('.system_manage a').addClass('cur');
+$('.erji').show();
+$('.show_id').click(function() {
+    location.href = 'show_id';
+});
+getInitalData(); //初始化 显示层级信息
+addSystem(); //扩大组织结构 添加点击事件
+deleteLevelRule(); //删除层级
+eidtContentName(); //编辑层级内容名称
+appendWindow();//弹窗
+function getInitalData() {
+    ajaxPost('/curd_school_system/getInitalData', '', function(data) {
+        var sys = data.school_system;
+        var sys_form = data.school_system_form;
+        var str = '';
+        for (var i in sys) {
+            str += '<div class="systemrow lid_' + sys[i].s_y_id + '" data-id="' + sys[i].s_y_id + '"><p class="orange_block" ><span class="system_name">' + sys[i].s_y_name + '</span><i class="fa fa-close fr_c_s rule-del show_cursor"></i><i class="fa fa-pencil fr_c_s rule-edit show_cursor"></i></p></div>';
+        }
+        $('.last_parient_id').val(data.last_parent_id);
+        $('.system-construction').append(str);
+        $(".rule-edit").bind("click", editLevelNameRule);
+        appendFormToLevel(sys_form);
+        addFirstSystemForm();
+    }, false);
+}
+
+// 层级中的内容
+function appendFormToLevel(arr,obj) {
+    for (var i in arr) {
+        var str = '';
+        var str_man = '';
+        var syid = arr[i].s_y_id;
+        var syfid = arr[i].s_y_f_id;
+        for (var j in arr[i].manager) {
+            str_man += arr[i].manager[j] + "，";
+        }
+        str_man=str_man.substring(0,str_man.length-1);
+        str += "<div class='white_block text_center show_cursor get_system_form' s-y-f-id='" + syfid + "'><p class='ch_op' hidden><i class='fa fa-plus form_add'></i><i class='fa fa-pencil form_edit'></i><i class='fa fa-user form_user' s-y-f-id='" + syfid + "' onclick='showMask()'></i><i class='fa fa-close form_del'></i></p><p class='font_color_black font_size_24 yname'>" + arr[i].s_y_f_name + "</p><p hidden><input class='in_level_name' type='text' value='" + arr[i].s_y_f_name + "'><i class='fa fa-close fr font_color_red form_cancel'></i><i class='fa fa-check fr font_color_green form_save'></i></p><p class='font_color_black font_size_14 syf"+syfid+"' style='margin:8px 0; '>负责人：" + str_man + "</p></div>";
+        $(".lid_" + syid).append(str);
+    }
+    if(typeof(obj)!='undefined' && !arr){
+        obj.find('.form_file').remove();
+        obj.find('.ch_op').append("<i class='fa fa-folder form_file'></i>");
+    }
+}
+
+
+function addSystem() {
+    $("#add_level").click(function() {
+        $(this).attr('disabled', true);
+        var str = '<div class="systemrow addlevelinputdiv" data-id="' + '"><p class="orange_block" ><input class="in_level_name" type="text" /> <i class="fa fa-close fr show_cursor level_cancel"></i><i class="fa fa-check fr show_cursor level_confirm"></i></p></div>';
+        var length_level = $('.systemrow').length; //获取层级个数
+        if (length_level < 7) {
+            $('.system-construction').append(str);
+            $('.in_level_name').select();
+            addLevelClickEvent();
+        } else
+            alert("层级已达上限");
+    });
+
+}
+
+function addLevelClickEvent() {
+    $(".level_confirm").click(function(event) {
+        var s_y_name = $(".in_level_name").val();
+        var parent_id = $('.last_parient_id').val();
+        if (s_y_name == "") {
+            alert("层级名称不能为空");
+        } else {
+            var aData = "s_y_name=" + s_y_name + "&parent_id=" + parent_id;
+            ajaxPost('/curd_school_system/create_school_system', aData, function(data) {
+                if (data.flag) {
+                    $('.last_parient_id').val(data.s_y_id);
+                    $('.addlevelinputdiv').remove();
+                    var str = '<div class="systemrow lid_' + data.s_y_id + '" data-id="' + data.s_y_id + '"><p class="orange_block" ><span class="system_name">' + data.s_y_name + '</span><i class="fa fa-close fr_c_s rule-del show_cursor"></i><i class="fa fa-pencil fr_c_s rule-edit show_cursor"></i></p></div>';
+                    $('.system-construction').append(str);
+                    $(".rule-edit").bind("click", editLevelNameRule);
+                    $('.last_parient_id').val(data.s_y_id);
+                } else {
+                    alert("添加失败！");
+
+                }
+            });
+        }
+        $("#add_level").attr('disabled', false);
+    });
+    $(".level_cancel").click(function(event) {
+        $(this).parent().parent().remove();
+        $("#add_level").attr('disabled', false);
+    });
+}
+
+
+
+/*
+ * 层级名字编辑规则
+ */
+function editLevelNameRule() {
+    var parent = $(this).parent();
+    var temp = parent.find("span").text();
+    parent.empty().append("<input class='in_level_name' type='text' value='" + temp + "' /><i class='fa fa-close fr show_cursor rule-cancle' fname='" + temp + "'></i><i class='fa fa-check fr show_cursor rule-save'></i>");
+    parent.find("input").focus();
+    parent.find(".rule-save").bind("click", updateLevelNameRule);
+    parent.find(".rule-cancle").bind("click", cancelEdite);
+}
+
+/*
+ * 层级名字更新规则
+ */
+function updateLevelNameRule() {
+    var parent = $(this).parent();
+    var this_name = parent.find("input").val();
+    var dataid = parent.parent().attr('data-id');
+    if (this_name == "") {
+        alert("层级名字不能为空");
+    } else {
+        var str = "<span class='system_name'>" + this_name + "</span><i class='fa fa-close fr_c_s rule-del show_cursor'></i><i class='fa fa-pencil fr_c_s rule-edit show_cursor'></i>";
+        parent.empty().append(str);
+        $(".rule-edit").bind("click", editLevelNameRule);
+        var aData = "s_y_id=" + dataid + "&s_y_name=" + this_name;
+        ajaxPost('/curd_school_system/update_school_system', aData, function(data) {
+            if (data.flag == 0) {
+                alert("编辑失败");
+            }
+        });
+    }
+}
+
+// 取消编辑
+function cancelEdite() {
+    var tname = $(this).attr('fname');
+    var parent = $(this).parent();
+    var str = "<span class='system_name'>" + tname + "</span><i class='fa fa-close fr_c_s rule-del show_cursor'></i><i class='fa fa-pencil fr_c_s rule-edit show_cursor'></i>";
+    parent.empty().append(str);
+    $(".rule-edit").bind("click", editLevelNameRule);
+}
+
+
+/*
+ * 删除层级
+ */
+function deleteLevelRule() {
+    $(document).on('click', '.rule-del', function() {
+        if (confirm("红色警告：删除此根目录后，您在此根目录下创建的所有组织及成员，和此目录的后续组织及成员都将全部被删除，确定要删除吗？")) {
+            var this_val = $(this).parent().parent().attr("data-id");
+            delLevelAjax(this_val);
+        }
+    });
+
+}
+
+// 执行删除的ajax
+function delLevelAjax(dataid) {
+    var aData = "s_y_id=" + dataid;
+    ajaxPost('/curd_school_system/delete_school_system', aData, function(data) {
+        if (data.flag == 1) {
+            $('.last_parient_id').val($(".lid_" + dataid).prev().attr("data-id"));
+            $(".lid_" + dataid).nextAll().remove();
+            $(".lid_" + dataid).remove();
+            alert("删除成功");
+        } else {
+            alert("该组织还有层级，不允许删除");
+        }
+    });
+}
+
+
+// 编辑层级内容名称
+function eidtContentName() {
+    $(document).on('click', '.form_edit', function() {
+        var name = $(this).parent().parent().find('.yname').text();
+        $(this).parent().next().hide();
+        $(this).parent().next().next().show().find('input').val(name).select();
+        return false;
+    });
+    $(document).on('click', '.form_cancel', function() {
+        var name = $(this).parent().prev().text();
+        $(this).parent().hide();
+        $(this).parent().prev().text(name).show();
+        return false;
+    });
+    $(document).on('click', '.form_save', function() {
+        var newname = $(this).prev().prev().val();
+        var fid = $(this).parent().parent().attr('s-y-f-id');
+        if (newname == '') {
+            alert("请输入名称");
+        } else {
+            modifyContentNameAjax(fid, newname);
+            $(this).parent().hide();
+            $(this).parent().prev().text(newname).show();
+        }
+        return false;
+    });
+    $(document).on('click', '.form_del', function() {
+        var syid = $(this).parent().parent().attr('s-y-f-id');
+        var obj = $(this);
+        if (confirm("红色警告：删除此组织后，您在此组织下创建的所有成员及后续组织成员都将全部被删除，确定要删除吗？")) {
+            delFormAjax(obj, syid);
+        }
+        return false;
+    });
+    $(document).on('click', '.form_add', function() {
+        var obj = $(this).parent().parent().parent().next();
+        var s_y_id = $(this).parent().parent().parent().next().data('id');
+        var parent_id = $(this).parent().parent().attr('s-y-f-id');
+        addSystemFormDetail(obj, s_y_id, parent_id);
+        return false;
+    });
+    $(document).on('click', '.get_system_form', function() {
+        $(this).parent().find('.cur_light_orange').removeClass('cur_light_orange');
+        $(this).addClass('cur_light_orange');
+        $('.ch_op').hide();
+        $(this).find('.ch_op').show();
+        var parent_id = $(this).attr('s-y-f-id');
+        var obj = $(this);
+        getNextSystemForm(obj, parent_id);
+    });
+    $(document).on('click', '.form_user', function() {
+        var syfid = $(this).attr("s-y-f-id");
+        getSystemFormManagerList(syfid);
+        return false;
+    });
+    $(document).on('click', '.form_file', function() {
+        var syfid=$(this).parent().parent().attr('s-y-f-id');
+        var obj=$(this).parent().parent();
+        if (confirm("点击毕业后，此组织内所有的学生将毕业，他们的学习数据将不会再统计到您目前的成绩库中")) {
+            archiveSystemForm(obj,syfid);
+        }
+        return false;
+    });
+}
+
+//修改层级内容名字ajax
+function modifyContentNameAjax(fid, name) {
+    var aData = {
+        s_y_f_id: fid,
+        s_y_f_name: name
+    }
+    ajaxPost('/curd_school_system/update_school_system_form', aData, function(data) {
+        if (data.flag != 1) {
+            alert("修改名字出错");
+            return false;
+        }
+    });
+}
+
+
+// 删除层级内容
+function delFormAjax(obj, syid) {
+    var aData = {
+        s_y_f_id: syid
+    }
+    ajaxPost('/curd_school_system/delete_school_system_form', aData, function(data) {
+        if (data.flag == 1) {
+            obj.parent().parent().remove();
+            alert("删除成功");
+        }
+    });
+}
+
+//为第一组织添加层级
+function addFirstSystemForm() {
+    $('.frist_form_add').click(function() {
+        var s_y_id = $('.systemrow:first').data('id');
+        var first_row = $('.systemrow:first');
+        var parent_id = 0;
+        addSystemFormDetail(first_row, s_y_id, parent_id);
+    });
+}
+
+// 添加下一级
+function addSystemFormDetail(obj, s_y_id, parent_id) {
+    var str = "<div class='white_block unique'><input class='in_level_name' type='text'><i class='fa fa-close fr font_color_red show_cursor addformcancel'></i><i class='fa fa-check fr font_color_green show_cursor addfromconfirm'></i></p></div>";
+    var len = $(".unique").length;
+    if (len == 0) {
+        obj.append(str);
+        $(".unique").find("input").select();
+        $('.addformcancel').click(function(event) {
+            $(this).parent().remove();
+            return false;
+        });
+        $(".addfromconfirm").click(function(event) {
+            var s_y_f_name = $(this).prev().prev().val(); //需要加一个填写名字
+            if (s_y_f_name == '') {
+                alert("请输入名称");
+            } else {
+                $(this).parent().remove();
+                addSystemFormPost(s_y_id, s_y_f_name, parent_id);
+            }
+            return false;
+        });
+    }
+}
+
+//添加层级ajax
+function addSystemFormPost(s_y_id, s_y_f_name, parent_id) {
+    ajaxPost('/curd_school_system/create_school_system_form', {
+        s_y_id: s_y_id,
+        s_y_f_name: s_y_f_name,
+        parent_id: parent_id,
+    }, function(data) {
+        if (data.flag == 1) {
+            var system_from = new Array();
+            system_from[0] = data;
+            appendFormToLevel(system_from);
+        } else {
+            alert("添加失败");
+        }
+    });
+}
+
+
+
+function getNextSystemForm(obj, parent_id) {
+    ajaxPost('/curd_school_system/get_next_system_form', {
+        parent_id: parent_id
+    }, function(data) {
+        obj.parent().nextAll().find('.get_system_form').remove();
+        appendFormToLevel(data,obj);
+    });
+}
+
+
+
+function appendWindow() {
+    $(document).on('click', '#addteacher', function() {
+        $(this).parent().hide();
+        $(this).parent().next().show();
+    });
+    $(document).on('click', '#closebox', function() {
+        var syid = $(this).attr('s_y_f_id');
+        var data=$("table.nowtable tr.bg_white");
+        var str='';
+        data.each(function(index, el) {
+            str+=$(this).find('td').first().text()+'，';
+        });
+        str='负责人：'+str;
+        str=str.substring(0,str.length-1);
+        showNewCharge(syid,str);
+        $(".appendbody").remove();
+        hideMask();
+    });
+    $(document).on('click', '.seach_teacher_btn', function() {
+        var syfid = $(this).attr("s_y_f_id");
+        var name=$(this).prev().prev().prev().prev().prev().val();
+        var phone=$(this).prev().prev().prev().val();
+        var email=$(this).prev().val();
+        console.log(email);
+        getManagerExceptSystemForm(syfid,name,phone,email);
+    });
+    $(document).on('click', '.cancelpower', function() {
+        var syfid=$(this).attr("syfid");
+        var smid=$(this).attr("smid");
+        var obj=$(this).parent().parent();
+         if (confirm("取消该教师的负责权利后，该教师将不能再继续管理这个组织，确定要取消吗？")) {
+            delSystemManager(obj,syfid,smid);
+        }
+    });
+    $(document).on('click', '.addpower', function() {
+        var syfid=$(this).attr("syfid");
+        var smid=$(this).attr("smid");
+        var obj=$(this).parent().parent();
+        addSystemManager(obj,syfid,smid);
+    });
+}
+function getManagerExceptSystemForm(syfid,tname,tel,temial){
+    var aData = {s_y_f_id: syfid,name: tname,phone: tel,email: temial};
+     ajaxPost('/curd_school_system/getManagerExceptSystemForm', aData, function(data) {
+        var str='';
+        var str_tittle="<tr class='fontsize_14'><td>教师姓名</td><td>联系手机号</td><td>邮箱</td><td>操作</td></tr>";
+        for(var i in data){
+            str+="<tr class='bg_white fontsize_14'><td>"+data[i].s_m_realname+"</td><td>"+data[i].s_m_telephone+"</td><td>"+data[i].s_m_email+"</td><td><a class='operate font_color_orange show_cursor addpower' syfid='"+syfid+"'  smid='"+data[i].s_m_id+"'>添加</a></td></tr>";
+        }
+        $(".mantable").empty().append(str_tittle+str);
+    });
+}
+
+function getSystemFormManagerList(syfid) {
+    var aData = {s_y_f_id: syfid};
+    ajaxPost('/curd_school_system/getSystemFormManagerList', aData, function(data) {
+        var str_man='';
+        var str='';
+        for(var i in data){
+            str_man+="<tr class='bg_white fontsize_14'><td>"+data[i].s_m_realname+"</td><td>"+data[i].s_m_telephone+"</td><td>"+data[i].s_m_email+"</td><td><a class='operate font_color_orange show_cursor cancelpower' syfid='"+syfid+"'  smid='"+data[i].s_m_id+"'>取消负责权利</a></td></tr>";
+        }
+        str="<div class='appendbody'><div class='tab-container'><div class='panel-container'style='padding:20px 40px;'><p class='font_size_18'><span class='font_color_gray'>当前负责教师</span><i id='closebox' class='fa fa-close fr_c_s font_color_red show_cursor' s_y_f_id='"+syfid+"'></i></p><div class='infobox'><table class='gridtable nowtable'><tr class='fontsize_14'><td>教师姓名</td><td>联系手机号</td><td>邮箱</td><td>操作</td></tr>"+str_man+"</table></div><div class='text_center add_box'><i id='addteacher'class='fa fa-plus-circle font_color_orange show_cursor'></i><span class='font_color_gray'style='font-size:14px;'>该组织还需更多负责教师请直接点击+号</span></div><div class='search_box'hidden><span>教师姓名：</span><input type='text'class='cap_input_small border_color_black'><span>教师手机号：</span><input type='text'class='cap_input_small border_color_black'><span>邮箱</span><input type='text'class='cap_input_small border_color_black'><button class='seach_teacher_btn cap_orange_btn' s_y_f_id='"+syfid+"'>确定</button><table class='gridtable mantable'></table></div></div></div></div>";
+        $("body").append(str);
+    });
+}
+
+
+function delSystemManager(obj,syfid,smid){
+    var aData = {s_y_f_id: syfid, s_m_id:smid};
+    ajaxPost('/curd_school_system/delSystemManager', aData, function(data) {
+       if (data.flag==1) {
+            obj.remove();
+       }else{
+            alert("取消权利失败");
+       }
+    });
+}
+
+function addSystemManager(obj,syfid,smid){
+    var aData = {s_y_f_id: syfid, s_m_id:smid};
+    ajaxPost('/curd_school_system/addSystemManager', aData, function(data) {
+       if (data.flag==1) {
+            obj.find("a").removeClass('addpower').addClass('cancelpower').text('取消负责权利');
+            var objclone=obj.clone();
+            obj.remove();
+            $(".nowtable").append(objclone);
+       }else{
+            alert("取消权利失败");
+       }
+    });
+}
+function archiveSystemForm(obj,syfid){
+    var aData = {s_y_f_id: syfid};
+    ajaxPost('/curd_school_system/archiveSystemForm', aData, function(data) {
+       if (data.flag==1) {
+            obj.remove();
+            alert("归档成功");
+       }else{
+            alert("归档失败");
+       }
+    });
+}
+
+//显示遮罩层  该函数绑定在form_user按钮中
+function showMask(){     
+        $("#mask").css("height",$(document).height());     
+        $("#mask").css("width",$(document).width());     
+        $("#mask").show();     
+    }  
+//隐藏遮罩层  该函数绑定在#closebox按钮中
+function hideMask(){     
+    $("#mask").hide();     
+}
+function showNewCharge(syfid,str){
+    $(".syf"+syfid).html(str);
+}
+</script>
+
+</html>

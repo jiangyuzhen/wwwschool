@@ -1,0 +1,586 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.circliful.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/new_main.css">
+
+    <link href="plugin/left_nav/css/font-awesome.min.css" rel="stylesheet">
+    <script src="plugin/tab_plugin/jquery.hashchange.min.js" type="text/javascript"></script>
+    <script src="plugin/tab_plugin/jquery.easytabs.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="plugin/tab_plugin/tab_style.css">
+    <title>测试管理>查看测试>测试详情</title>
+    <style type="text/css">
+        /*重置百分比圆环的css*/
+        .circliful {
+            position: relative;
+            display: inline-block;
+            margin: 20px;
+            color: #717171;
+            cursor: pointer;
+        }
+
+        .circliful:hover {
+            border-radius: 90px;
+            background-color: #DDDDDD;
+        }
+
+        /*圈内大文字的颜色*/
+        .circle-info,
+        .circle-info-half {
+            color: #999;
+            top: 41px;
+            /*到百分之的距离*/
+            height: 10px;
+            line-height: 10px;
+        }
+
+        /*圈内小文字的颜色*/
+
+        .circliful .fa {
+            margin: -10px 3px 0 3px;
+            position: relative;
+            bottom: 4px;
+        }
+
+        /*百分比圆环图样式*/
+
+    </style>
+</head>
+
+<body>
+<div id="header"></div>
+<div id="left-navigation"></div>
+<div id="mainbody">
+    <div class="mainbody_title_box">查看测试><span class="test_name"></span></div>
+    <div class="mainbody_top">
+        <span>当前考核对象：</span><span>一班</span>
+    </div>
+    <div class="mainbody_bottom">
+        <div id="tab-container" class='tab-container'>
+            <ul class='etabs'>
+                <li class='tab'><a href="#tab-stucondition">学习情况</a></li>
+                <li class='tab'><a href="#tab-finishcon">学生完成情况</a></li>
+            </ul>
+            <div class='panel-container'>
+                <div id="tab-stucondition">
+                    <p class="font_color_black font_size_14" style="margin:-38px 0 15px 0;">成绩：</p>
+
+                    <div>
+                        <div class="score_block block_bcolor_red text_center">
+                            <p class="font_size_18 distance">学生平均答题量</p>
+
+                            <p>
+                                <span id="did_question_num" class="font_size_38"></span>
+                                <span class="font_size_18">道</span>
+                            </p>
+                        </div>
+                        <div class="score_block block_bcolor_green text_center">
+                            <p class="font_size_18 distance">本次测试正确率</p>
+
+                            <p>
+                                <span id="accuracy" class="font_size_38"></span>
+                                <span class="font_size_18">%</span>
+                            </p>
+                        </div>
+                        <div class="score_block block_bcolor_blue text_center">
+                            <p class="font_size_18 distance">本次测试平均用时</p>
+
+                            <p>
+                                <span id="averTimeM" class="font_size_38"></span>
+                                <span class="font_size_18">分</span>
+                                <span id="averTimeS" class="font_size_38"></span>
+                                <span class="font_size_18">秒</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <p class="font_color_black font_size_14" style="margin:48px 0 0 0;">题目正确率：</p>
+
+                    <div class="" id="allnode"></div>
+
+                    <p class="font_color_black font_size_14" style="margin:48px 0 5px 0;">学生本次测试情况：</p>
+                    <table class="gridtable" id="GroupQuestionStatistics"></table>
+
+                </div>
+
+                <div id="tab-finishcon">
+                    <table class="gridtable" id="finish_condition"></table>
+                    <div class="mainbody_white_box" style="text-align:center; margin-top:20px; border:none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="foot"></div>
+</body>
+<script type="text/javascript">
+    $('#tab-container').easytabs();
+
+    $("#header").load("header.html");
+    $("#left-navigation").load("left.html", function () {
+        $("ul.accordion>li:eq(2)").addClass('open').children().show().find('li:eq(0)').children().addClass('bcolor');
+    });
+    $("#foot").load("footer.html");
+
+
+    /*-----------------js获取GET参数--------------------*/
+    function getPar(par) {
+        //获取当前URL
+        var local_url = document.location.href;
+        //获取要取得的get参数位置
+        var get = local_url.indexOf(par + "=");
+        if (get == -1) {
+            return false;
+        }
+        //截取字符串
+        var get_par = local_url.slice(par.length + get + 1);
+        //判断截取后的字符串是否还有其他get参数
+        var nextPar = get_par.indexOf("&");
+        if (nextPar != -1) {
+            get_par = get_par.slice(0, nextPar);
+        }
+        return get_par;
+    }
+    /*-------------------------------------------------------*/
+    var menu_list = Knowledge_control_ajax();
+    var menu_reverse = menu_list.menu_reverse;
+    var menu = menu_list.menu_positive;
+    var testid = getPar('testid');
+    var testName = decodeURI(getPar('test_name'));
+    $('.test_name').html(testName);
+    var groupid = '';
+    get_groupid_ajax(testid);
+    var studentDo = get_group_testcondition(testid);
+    get_groupAccuracy_ajax(testid);
+    get_finish_condition(testid, 1);
+    //获取groupid
+    function get_groupid_ajax(testid) {
+        $.ajax({
+            url: '/test_detail/getTestGroup',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                test_id: testid
+            },
+            success: function (json) {
+                groupid += json.Data[0].group_id;
+            }
+        });
+    }
+
+    // 获取学习组测试情况
+    function get_group_testcondition(testid) {
+        var studentDo;
+        $.ajax({
+            url: '/test_detail/getGroupStatistics',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            data: {
+                test_id: testid
+            },
+            success: function (json) {
+                var data = json.Data;
+                var allStuN = parseInt(data.all_students); //所有学生数
+                var didQueN = data.did_question_num; //做题数 不包括未选择
+                var didQueRN = data.did_question_right_num; //答对题量
+                var totalQueN = data.total_question_num; //总体量 包括未选择
+                var totalUseT = parseInt(data.total_use_time); //总用时
+                var stuDo = data.student_do; //已做题学生数
+                var accuracy; //正确率
+                var aver_TimeM = stuDo != 0 ? (parseInt((totalUseT / stuDo) / 60).toFixed(0)) : '-'; //平均时间 分钟
+                var aver_TimeS = stuDo != 0 ? (parseInt((totalUseT / stuDo) % 60).toFixed(0)) : '-'; //平均时间 秒
+                if (parseInt(totalQueN) == 0) {
+                    accuracy = 0;
+                } else {
+                    accuracy = parseInt(didQueRN) / parseInt(totalQueN) * 100;
+                }
+                $("#did_question_num").text(stuDo != 0 ? (parseInt(didQueN / stuDo).toFixed(0)) : '-');
+                $("#accuracy").text(stuDo != 0 ? (accuracy.toFixed(1)) : '-');
+                $("#averTimeM").text(aver_TimeM);
+                $("#averTimeS").text(aver_TimeS);
+                studentDo = stuDo;
+            }
+        });
+        return studentDo;
+    }
+
+    // 获取学习组题目正确率
+    function get_groupAccuracy_ajax(testid) {
+        $.ajax({
+            url: '/test_detail/getGroupQuestionStatistics',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                test_id: testid
+            },
+            success: function (json) {
+                var data = json.Data;
+                var str = '';
+                for (var i in data) {
+                    var k = 1 + parseInt(i);
+                    var didNum = parseInt(data[i].did_num);
+                    var didRnum = parseInt(data[i].did_right_num);
+                    var ave;
+                    if (didNum == 0) {
+                        str += "<div class='circliful_list' id='myStat3' test-id='" + testid + "' que-id='" + data[i].question_id + "' data-dimension='90' data-text='未答题' data-info='" + k + ":" + data[i].menu_name + "' data-width='10' data-fontsize='16' data-percent='100' data-fgcolor='#e76644' data-bgcolor='#eee' data-fill='#FFF'></div>";
+                    } else {
+                        ave = ((didRnum / didNum) * 100).toFixed(0);
+                        if (ave >= 80) {
+                            str += "<div class='circliful_list' id='myStat3' test-id='" + testid + "' que-id='" + data[i].question_id + "' data-dimension='90' data-text='" + ave + "%' data-info='" + k + ":" + data[i].menu_name + "' data-width='10' data-fontsize='16' data-percent='" + ave + "' data-fgcolor='#28b77a' data-bgcolor='#eee' data-fill='#FFF'></div>";
+                        }
+                        if (ave >= 60 && ave <= 79) {
+                            str += "<div class='circliful_list' id='myStat3' test-id='" + testid + "' que-id='" + data[i].question_id + "' data-dimension='90' data-text='" + ave + "%' data-info='" + k + ":" + data[i].menu_name + "' data-width='10' data-fontsize='16' data-percent='" + ave + "' data-fgcolor='#28abb7' data-bgcolor='#eee' data-fill='#FFF'></div>";
+                        }
+                        if (ave < 59) {
+                            str += "<div class='circliful_list' id='myStat3' test-id='" + testid + "' que-id='" + data[i].question_id + "' data-dimension='90' data-text='" + ave + "%' data-info='" + k + ":" + data[i].menu_name + "' data-width='10' data-fontsize='16' data-percent='" + ave + "' data-fgcolor='#e76644' data-bgcolor='#eee' data-fill='#FFF'></div>";
+                        }
+
+                    }
+
+                }
+                $("#allnode").append(str);
+                active_percent();
+                treeData = get_queslist_ajax(data);
+                var Nodeque = treeData.arr_name; //知识点id
+                var firstM = treeData.firstMune;
+                var secondM = treeData.secondMenu;
+                var thirdM = treeData.thirdMenu;
+                show_Knowledge_ajax(firstM, secondM, thirdM);
+                group_list_js();
+            }
+        });
+    }
+
+    // 给百分比按钮添加点击事件
+    function active_percent() {
+        var AllNode = $("#allnode div");
+        AllNode.each(function (index) {
+            $(this).attr('id', 'sty' + index).circliful();
+            $(this).click(function () {
+                location.href = "click_accuracy_condition.html?testid=" + $(this).attr('test-id') + "&quesid=" + $(this).attr("que-id");
+            });
+        });
+    }
+
+    // 获取学习组学生
+    function get_finish_condition(testid, pg) {
+        $.ajax({
+            url: '/test_detail/getGroupUser',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                test_id: testid,
+                page: pg
+            },
+            success: function (json) {
+                var data = json.Data.group_user;
+                var str = "<tr class='fontsize_14 bg_gray'><td>考核对象</td><td>所在层级</td><td>学籍号</td><td>练习时间</td><td>答题数</td><td>正确率</td><td>操作</td></tr>";
+                for (var i in data) {
+                    var sysem_name = '';
+                    for (var j in data[i].user_system) {
+                        sysem_name += data[i].user_system[j] + '<br>';
+                    }
+                    if (data[i].status == 2) {
+
+                        str += "<tr class='fontsize_14' ><td>" + data[i].user_realname + "</td><td>" + sysem_name + "</td><td>" + data[i].user_sno + "</td><td>---</td><td>---</td><td>---</td><td><a class='remind operate font_color_red show_cursor' user-id='" + data[i].user_id + "'>提醒做题</a></td></tr>"
+                    } else {
+                        var aver_TimeM = parseInt(data[i].total_use_time / 60); //平均时间 分钟
+                        var aver_TimeS = parseInt(data[i].total_use_time) % 60; //平均时间 秒
+                        var percent = data[i].did_question_num == 0 ? 0 : parseInt(data[i].did_question_right_num) / parseInt(data[i].total_question_num) * 100;
+                        str += "<tr class='fontsize_14' ><td>" + data[i].user_realname + "</td><td>" + sysem_name + "</td><td>" + data[i].user_sno + "</td><td>" + aver_TimeM + "分" + aver_TimeS + "秒</td><td>" + data[i].did_question_num + "</td><td>" + parseInt(percent) + "%</td><td><a class='details operate font_color_green show_cursor' user-id='" + data[i].user_id + "' student-name='"+data[i].user_realname+"'>查看详情</a></td></tr>";
+                    }
+                }
+                $("#finish_condition").empty().append(str);
+                line_color_change();
+                tableHoverEvent();
+                group_show_page(testid, pg);
+                remind_detail_click();
+            }
+        });
+    }
+
+    // 提醒练习 和查看详情按钮 点击事件
+    function remind_detail_click() {
+        $(".remind").click(function (event) {
+            if (confirm('是否提醒该同学练习')) {
+                uid = $(this).attr("user-id");
+                $(this).css({background: '#e5e5e5'}).addClass('font_color_black');
+                $(this).attr('disabled', true);
+                remind_student_ajax(testid, uid);
+            }
+        });
+        $(".details").click(function (event) {
+            uid = $(this).attr("user-id");
+            uname = $(this).attr("student-name");
+            location.href = "check_student_condition.html?testid=" + testid + "&userid=" + uid + "&studentname=" + uname;
+        });
+    }
+
+    //提醒学生练习ajax
+    function remind_student_ajax(testid, userid) {
+        $.ajax({
+            url: '/test_detail/exerciseAlert',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                test_id: testid,
+                user_id_str: userid
+            },
+            success: function (json) {
+                var data = json.Data;
+                var errcode = json.Errorcode;
+                if (errcode == 0) {
+                    if (data.flag == 1) {
+                        alert("已成功提醒这位学生做题！");
+                    } else {
+                        alert("error:提醒练习失败！");
+                    }
+                } else {
+                    alert("该用户尚未在App端登录，无法提醒练习");
+
+                }
+            }
+        });
+    }
+
+
+    // 同学完成情况页码分页
+    function group_show_page(testid, which_page) {
+        $.ajax({
+            url: '/test_detail/getGroupUser',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                test_id: testid,
+                page: which_page
+            },
+            success: function (json) {
+                var page = json.Data.page;
+                var total_page = json.Data.total_page;
+                var str = '';
+                str += "<a class='pages show_cursor' page-id='1'>首页</a>";
+                for (var i = 1; i <= total_page; i++) {
+                    if (i == page) {
+                        str += "<a class='pages show_cursor pagescur' page-id='" + i + "'>" + i + "</a>";
+                    } else {
+                        str += "<a class='pages show_cursor' page-id='" + i + "'>" + i + "</a>";
+                    }
+                    ;
+
+                }
+                str += "<a class='pages show_cursor' page-id='" + total_page + "'>尾页</a>";
+                $(".mainbody_white_box").empty().append(str);
+                group_page_click();
+            }
+        });
+    }
+
+
+    //添加分页按钮点击事件
+    function group_page_click() {
+        $(".pages").click(function () {
+            var w_page = $(this).attr("page-id");
+            get_finish_condition(testid, w_page);
+            group_show_page(testid, w_page);
+        });
+    }
+
+    //表格列的颜色 交替显示
+    function line_color_change() {
+        var obj = $("tr.fontsize_14");
+        obj.each(function (index, el) {
+            if (parseInt(index) % 2 != 0) {
+                $(this).addClass('bg_white');
+            }
+        });
+    }
+
+    // 列表 hover事件
+    function tableHoverEvent() {
+        $("tr").hover(function () {
+            $(this).addClass('bg_gray');
+        }, function () {
+            $(this).removeClass('bg_gray');
+        });
+    }
+
+
+    // 获取三级知识点id和名称 题目id
+    function get_queslist_ajax(data) {
+        var arrMune = new Array();
+        var arrName = new Array();
+        var arrQues = new Array();
+        var arrData = new Array();
+        var arrSeconMeun = new Array();
+        var arrFirstMeun = new Array();
+        for (var i in data) {
+            arrMune[i] = data[i].menu_id;
+            arrName[i] = data[i].menu_name;
+            arrQues[i] = data[i].question_id;
+        }
+        for (var j in data) {
+            if (typeof(arrData[data[j].menu_id]) == 'undefined') {
+                arrData[data[j].menu_id] = new Object();
+                arrData[data[j].menu_id].did_num = parseInt(data[j].did_num);
+                arrData[data[j].menu_id].did_right_num = parseInt(data[j].did_right_num);
+                arrData[data[j].menu_id].total_num = parseInt(data[j].total_num);
+                arrData[data[j].menu_id].total_use_time = parseInt(data[j].total_use_time);
+            } else {
+                arrData[data[j].menu_id].did_num += parseInt(data[j].did_num);
+                arrData[data[j].menu_id].did_right_num += parseInt(data[j].did_right_num);
+                arrData[data[j].menu_id].total_num += parseInt(data[j].total_num);
+                arrData[data[j].menu_id].total_use_time += parseInt(data[j].total_use_time);
+            }
+        }
+        for (var i in arrData) {
+            var key = menu_reverse[i];
+            if (typeof(arrSeconMeun[key.second_menu_id]) == 'undefined') {
+                arrSeconMeun[key.second_menu_id] = new Object();
+                arrSeconMeun[key.second_menu_id].did_num = parseInt(arrData[i].did_num);
+                arrSeconMeun[key.second_menu_id].did_right_num = parseInt(arrData[i].did_right_num);
+                arrSeconMeun[key.second_menu_id].total_num = parseInt(arrData[i].total_num);
+                arrSeconMeun[key.second_menu_id].total_use_time = parseInt(arrData[i].total_use_time);
+            } else {
+                arrSeconMeun[key.second_menu_id].did_num += parseInt(arrData[i].did_num);
+                arrSeconMeun[key.second_menu_id].did_right_num += parseInt(arrData[i].did_right_num);
+                arrSeconMeun[key.second_menu_id].total_num += parseInt(arrData[i].total_num);
+                arrSeconMeun[key.second_menu_id].total_use_time += parseInt(arrData[i].total_use_time);
+            }
+        }
+        for (var i in arrData) {
+            var key = menu_reverse[i];
+            if (typeof(arrFirstMeun[key.first_menu_id]) == 'undefined') {
+                arrFirstMeun[key.first_menu_id] = new Object();
+                arrFirstMeun[key.first_menu_id].did_num = parseInt(arrData[i].did_num);
+                arrFirstMeun[key.first_menu_id].did_right_num = parseInt(arrData[i].did_right_num);
+                arrFirstMeun[key.first_menu_id].total_num = parseInt(arrData[i].total_num);
+                arrFirstMeun[key.first_menu_id].total_use_time = parseInt(arrData[i].total_use_time);
+            } else {
+                arrFirstMeun[key.first_menu_id].did_num += parseInt(arrData[i].did_num);
+                arrFirstMeun[key.first_menu_id].did_right_num += parseInt(arrData[i].did_right_num);
+                arrFirstMeun[key.first_menu_id].total_num += parseInt(arrData[i].total_num);
+                arrFirstMeun[key.first_menu_id].total_use_time += parseInt(arrData[i].total_use_time);
+            }
+        }
+        return {
+            arr_menu: arrMune,
+            arr_name: arrName,
+            arr_que: arrQues,
+            arr_data: arrData,
+            firstMune: arrFirstMeun,
+            secondMenu: arrSeconMeun,
+            thirdMenu: arrData
+        };
+    }
+
+    // 知识点掌握概况 列表数据抓取
+    function Knowledge_control_ajax(arr) {
+        var menu_list;
+        $.ajax({
+            url: '/pubblico/getMenuList',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            success: function (json) {
+//                menu_positive = json.Data.menu_positive; //获取知识点对象
+//                menu_re = json.Data.menu_reverse;
+                menu_list = json.Data;
+            }
+        });
+//        return {
+//            menu_re,
+//            menu_positive,
+//        };
+        return menu_list;
+    }
+
+    // 知识点掌握概况 列表数据展示
+    function show_Knowledge_ajax(first, second, third) {
+
+        var str = '<tr><th>考点</th><th>平均答对</th><th>总共出题</th><th>正确率</th><th>平均测试用时</th></tr>';
+
+        for (var i in first) {
+            var secondmenu = menu[i].sons;
+            var accuracy;
+            if (first[i].total_num == 0) {
+                accuracy = 0;
+            } else {
+                accuracy = (parseInt(first[i].did_right_num) / parseInt(first[i].total_num) * 100).toFixed(1);
+            }
+            str += "<tr class='first'><td style='text-align:left; padding-left:14%;'><i class='fa fa-plus-circle list_c' point-id='" + i + "'></i><span class='m_left'>" + menu[i].name + "</span></td><td>" + (studentDo == 0 ? 0 : (first[i].did_right_num / studentDo).toFixed(1)) + "</td><td>" + (studentDo == 0 ? 0 : (first[i].total_num / studentDo).toFixed(1)) + "</td><td class='block_bcolor_red'>" + accuracy + "%</td><td>" + (studentDo == 0 ? 0 : (first[i].total_use_time / 60 / studentDo).toFixed(1)) + "分</td></tr>";
+            for (var j in secondmenu) {
+                for (var k in second) {
+                    if (j == k) {
+                        var thirdmenu = secondmenu[k].sons;
+                        var accuracy2;
+                        if (second[k].total_num == 0) {
+                            accuracy2 = 0;
+                        } else {
+                            accuracy2 = (parseInt(second[k].did_right_num) / parseInt(second[k].total_num) * 100).toFixed(1);
+                        }
+                        str += "<tr class='second bg_white point_" + i + "'  hidden><td style='text-align:left; padding-left:15%;'><i class='fa fa-plus-circle list_c1' point-id='" + k + "'></i><span class='m_left'>" + secondmenu[k].name + "</span></td><td>" + (studentDo == 0 ? 0 : (second[k].did_right_num / studentDo).toFixed(1)) + "</td><td>" + (studentDo == 0 ? 0 : (second[k].total_num / studentDo).toFixed(1)) + "</td><td>" + accuracy2 + "%</td><td>" + (studentDo == 0 ? 0 : (second[k].total_use_time / 60 / studentDo).toFixed(1)) + "分</td></tr>";
+                        for (var n in thirdmenu) {
+                            for (var m in third) {
+                                if (n == m) {
+                                    var accuracy3;
+                                    if (third[m].total_num == 0) {
+                                        accuracy3 = 0;
+                                    } else {
+                                        accuracy3 = (parseInt(third[m].did_right_num) / parseInt(third[m].total_num) * 100).toFixed(1);
+                                    }
+                                    str += "<tr class='bg_white  point_" + k + "' hidden><td style='text-align:left; padding-left:17%;'><i class='fa fa-circle' point-id='" + m + "' style='font-size: 12px;'></i><span class='m_left'>" + thirdmenu[m].name + "</span></td><td>" + (studentDo==0?0:(third[m].did_right_num/studentDo).toFixed(1)) + "</td><td>" + (studentDo==0?0:(third[m].total_num/studentDo).toFixed(1)) + "</td><td>" + accuracy3 + "%</td><td>" + (studentDo==0?0:(third[m].total_use_time / 60/studentDo).toFixed(1)) + "分</td></tr>";
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+            }
+
+        }
+        $("#GroupQuestionStatistics").empty().append(str);
+
+    }
+
+    function group_list_js() {
+        $("tr").hover(function () {
+            $(this).addClass('bg_gray');
+        }, function () {
+            $(this).removeClass('bg_gray');
+        });
+        $(".list_c").click(function () {
+            var p = $(this).attr("point-id");
+            //点击图片+-变化
+            if ($(this).attr("class").indexOf("fa-plus-circle") >= 0) {
+                $(this).removeClass('fa-plus-circle').addClass('fa-minus-circle');
+                $(".point_" + p).show();
+            } else {
+                $(this).removeClass('fa-minus-circle').addClass('fa-plus-circle');
+                $(this).parent().parent().nextUntil("tr.first").hide();
+                $("tr.second").find("i").removeClass('fa-minus-circle').addClass('fa-plus-circle');
+            }
+        });
+        $(".list_c1").click(function () {
+            var p = $(this).attr("point-id");
+            if ($(this).attr("class").indexOf("fa-plus-circle") >= 0) {
+                $(this).removeClass('fa-plus-circle').addClass('fa-minus-circle');
+                $(".point_" + p).show();
+            } else {
+                $(this).removeClass('fa-minus-circle').addClass('fa-plus-circle');
+                $(".point_" + p).hide();
+            }
+        });
+    }
+
+    // $(this).siblings('.child_'+this.id).toggle();  // 隐藏/显示所谓的子行
+
+</script>
+
+</html>
